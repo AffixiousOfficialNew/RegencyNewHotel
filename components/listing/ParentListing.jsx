@@ -11,8 +11,8 @@ const listing = () => {
     const searchParams = useSearchParams();
     const [search,setSearch] = useState("");
     const [data,setdata] = useState();
-    const dispatch = useDispatch();
-    // console.log({dispatch});
+    // const dispatch = useDispatch();
+
 
 
 
