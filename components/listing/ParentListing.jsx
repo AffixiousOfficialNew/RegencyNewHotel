@@ -53,6 +53,8 @@ const listing = () => {
           fetchKey();
       }, [searchParams]);
 
+      //
+
       useEffect(()=>{
         if(search){
             console.log("Dispatching getListOfHotel with search key:", search,data);
