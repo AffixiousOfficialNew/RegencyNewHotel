@@ -32,7 +32,7 @@ const listing = () => {
             const currency = searchParams.get('currency') || '';
             const cityId = searchParams.get('cityId') || 4629;
             const desId = searchParams.get('destinationId') || 352;
-            console.log({nationality,checkIn,checkOut,noOfRoom,countryCode,paxInfo,currency,cityId,desId,dest});
+            // console.log({nationality,checkIn,checkOut,noOfRoom,countryCode,paxInfo,currency,cityId,desId,dest});
             const API_URL =
               `https://prodapi.myholidays.com/hotelsearch/api/search/Hotel?nationality=${nationality}&residence=IN&destinationCode=&checkIn=${checkIn}&checkOut=${checkOut}&noOfRoom=${noOfRoom}&paxInfo=${paxInfo}&searchType=Direct&Affiliate=304&hotelId=&countryCode=${countryCode}&aSearch=&maxSR=0&deviceType=Desktop&cultureID=en-GB&airportCode=&Latitude=&Longitude=&Currency=${currency}&source=Direct&sort=pricing-asc&IsPromotedProperty=false&CustomerID=0&CustomerTypeID=0&UserID=0&CityId=${cityId}&DestinationId=${desId}`;
               // https://prodapi.myholidays.com/hotelsearch/api/search/Hotel?nationality=QA&destinationCode=ChIJf-jc_zTFRT4RsdTPeJ8x2UQ&checkIn=25%20Jul%202025&checkOut=26%20Jul%202025&noOfRoom=1&paxInfo=AA$|&searchType=Google&Affiliate=304&hotelId=&countryCode=&aSearch=&maxSR=5&deviceType=Desktop&cultureID=en-GB&airportCode&Latitude=&Longitude=&currency=INR&source=Direct
