@@ -1,7 +1,8 @@
 // app/layout.tsx
 import "@/styles/globals.css";
 import { Viewport } from "next";
-import clsx from "clsx";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 
 export const viewport: Viewport = {
@@ -19,13 +20,14 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body
+      <body className=""
        
       >
       
           <div>
+            <Header/>
             <main>{children}</main>
-           
+            <Footer/>
           </div>
       
       </body>
