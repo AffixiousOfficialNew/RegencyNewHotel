@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { getListOfHotel } from "../redux/slices/citySlice";
+import HotelListing from './listing/HotelListing'
 
 
 
@@ -51,6 +52,11 @@ const Listing = () =>{
     },[search,dispatch])
 
     console.log("new");
+    return(
+        <section>
+            <HotelListing/>
+        </section>
+    )
 }
 
 export default Listing;
