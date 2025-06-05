@@ -4,7 +4,10 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getInfo, getRoomDetails } from "../redux/slices/detailSlice";
-
+import SearchWidget from "./SearchWidget";
+import BannerDetails from "./detail/BannerDetails";
+import BannerContentDetails from "./detail/BannerContentDetails";
+import HotelDetailsResult from "./detail/HotelDetailsResult";
 
 
 
@@ -56,7 +59,19 @@ const Details = () =>{
     },[search,hotelId,dispatch])
     return(
         <section className="md:pb-0 pb-[100px]">
-            jfghfgdfghkjfd
+
+           <SearchWidget/>
+           <div className="container mx-auto px-4 md:px-0">
+           <div className="grid grid-cols-3 w-full py-5 gap-5">
+            <div className="col-span-2">
+            <BannerDetails/>
+            </div>
+            <div>
+            <BannerContentDetails/>
+            </div>
+            </div>
+           </div>
+           <HotelDetailsResult/>
         </section>
     )
 }
