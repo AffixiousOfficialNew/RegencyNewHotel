@@ -1,4 +1,4 @@
-import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const HOTEL_NEW_API_BASE_URL = process.env.NEXT_PUBLIC_NEW_HOTEL_API_BASE_URL;
@@ -7,14 +7,15 @@ const AUTHORIZATION_TOKEN = process.env.NEXT_PUBLIC_AUTHORIZATION_TOKEN;
 const initialState = {
     detailResult:[],
     roomResult:[],
-    selectedRooms: [],
-    totalRooms: 1,
-    newRooms: []
+    // selectedRooms: [],
+    // totalRooms: 1,
+    // newRooms: []
 }
 export const getInfo = createAsyncThunk(
     "list/hotel/details",
     async (hotelId, thunkAPI) => {
-        const apiUrl = `${HOTEL_NEW_API_BASE_URL}/api/search/Info?propertyId=${hotelId}&cultureId=en-GB&Affiliate=0`;
+        const apiUrl = `${HOTEL_NEW_API_BASE_URL}hotelsearch//api/search/Info?propertyId=${hotelId}&cultureId=en-GB&Affiliate=0`;
+        // https://prodapi.myholidays.com/hotelsearch/api/search/HotelInfo?propertyId=MH-00151158&cultureId=en-GB
     try {
       const resp =  await axios.get(apiUrl);
         return resp.data;
@@ -28,7 +29,7 @@ export const getInfo = createAsyncThunk(
 export const getRoomDetails = createAsyncThunk(
     'list/hote/details',
     async({search,hotelId},thunkAPI) =>{
-        const apiUrl = `${HOTEL_NEW_API_BASE_URL}/api/search/GetRoomResponse?Key=${search}&HotelId=${hotelId}`;
+        const apiUrl = `${HOTEL_NEW_API_BASE_URL}hotelsearch//api/search/GetRoomResponse?Key=${search}&HotelId=MH-00151158`;
         const MAX_RETRIES = 10; 
         let count = 0;
     
@@ -69,18 +70,18 @@ export const counterSlice = createSlice({
       resetdetailResult(state){
         state.roomResult=[];
       },
-      setTotalRooms: (state, action) => {
-        state.totalRooms = action.payload;
-      },
-      addSelectedRoom: (state, action) => {
-        state.selectedRooms.push(action.payload); // payload: { roomId, rateId, etc. }
-      },
-      addNewRooms: (state, action) => {
-        state.newRooms.push(action.payload)
-      },
-      resetSelectedRooms: (state) => {
-        state.selectedRooms = [];
-      },
+    //   setTotalRooms: (state, action) => {
+    //     state.totalRooms = action.payload;
+    //   },
+    //   addSelectedRoom: (state, action) => {
+    //     state.selectedRooms.push(action.payload); // payload: { roomId, rateId, etc. }
+    //   },
+    //   addNewRooms: (state, action) => {
+    //     state.newRooms.push(action.payload)
+    //   },
+    //   resetSelectedRooms: (state) => {
+    //     state.selectedRooms = [];
+    //   },
     },
     extraReducers: (builder) => {
       builder.addCase(getInfo.fulfilled, (state, action) => {
@@ -104,7 +105,9 @@ export const counterSlice = createSlice({
   });
   
   // Export actions
-  export const { resetdetailResult, addSelectedRoom, setTotalRooms, resetSelectedRooms, addNewRooms } = counterSlice.actions;
+  export const { resetdetailResult
+    // , addSelectedRoom, setTotalRooms, resetSelectedRooms, addNewRooms 
+} = counterSlice.actions;
   
   // Export reducer
   export default counterSlice.reducer;

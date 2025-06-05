@@ -1,20 +1,20 @@
-"use client"
-import React, { useEffect, useState } from "react";
-// import DetailsBanner from './DetailsBanner';
-// import DynamicDetail from "./DynamicDetail";
-import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams  } from "next/navigation";
+"use client";
 import axios from "axios";
-import { getInfo, getRoomDetails } from "../../redux/slices/detailSlice";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getInfo, getRoomDetails } from "../redux/slices/detailSlice";
 
-const Details = () => {
-    const dispatch = useDispatch();    
-    const globalCurrency = useSelector((state) => state.listing.currency)
-  const searchParams = useSearchParams ();
-    const [hotelId,setHotelId] = useState();
-    const [search, setSearch] = useState('');
+
+
+
+const Details = () =>{
+    const dispatch = useDispatch();
+    const searchParams = useSearchParams();
+    const [hotelId, setHotelId] = useState();
+    const [search,setsearch] = useState("");
     useEffect(()=>{
-        const fetchSearchKey = async () =>{
+        const fetchSearchKey = async ()=>{
             try {
                 const nationality = searchParams.get('nationality') || 'IN';
                 const checkIn = searchParams.get('checkIn') || '10 May 2025';
@@ -29,11 +29,11 @@ const Details = () => {
                 const cityId = searchParams.get('cityId') || 1;
                 const desId = searchParams.get('destinationId') || 0;
                 // console.log({nationality,checkIn,checkOut,noOfRoom,countryCode,paxInfo,currency,cityId,desId});
-                const API_URL = `https://stg.myholidays.com/hotelsearchtest//api/search/RoomAsyncV2?SearchKey=&nationality=${nationality}&destinationCode=${desId}&checkIn=${checkIn}&checkOut=${checkOut}&noOfRoom=${noOfRoom}&paxInfo=${paxInfo}&searchType=Direct&Affiliate=${aff}&hotelId=${hotelId}&countryCode=${countryCode}&deviceType=Desktop&cultureID=en-GB&currency=${globalCurrency}&source=Direct&CustomerID=0&CustomerTypeID=0`
+                const API_URL = `https://stg.myholidays.com/hotelsearchtest//api/search/RoomAsyncV2?SearchKey=&nationality=${nationality}&destinationCode=${desId}&checkIn=${checkIn}&checkOut=${checkOut}&noOfRoom=${noOfRoom}&paxInfo=${paxInfo}&searchType=Direct&Affiliate=304&hotelId=${hotelId}&countryCode=${countryCode}&deviceType=Desktop&cultureID=en-GB&currency=INR&source=Direct&CustomerID=0&CustomerTypeID=0`
                 const response = await axios.get(API_URL);
                 const key = response?.data?.SearchKey;
                 if(key){
-                    setSearch(key);
+                    setsearch(key);
                 } else {
                     console.error('no serach key found in api response');
                 }
@@ -44,31 +44,20 @@ const Details = () => {
         }
         fetchSearchKey();
     },[]);
-
-
-  
-
     useEffect(()=>{
         if(search && hotelId){
-            console.log('Dispatching room details with serach key:',search,hotelId);
-
+            console.log({search,hotelId});
             dispatch(getRoomDetails({search,hotelId}))
         }
-        
         if(hotelId){
-            console.log("Dispatching Info with hotelId:",hotelId);
-            dispatch(getInfo(hotelId));
+            console.log({hotelId});
+            dispatch(getInfo(hotelId))
         }
-    },[search, hotelId, dispatch])
-
-
-  
-return(
-    <section className="md:pb-0 pb-[100px]">
-        {/* <DetailsBanner/>
-        <DynamicDetail/> */}
-        
-    </section>
-)
+    },[search,hotelId,dispatch])
+    return(
+        <section className="md:pb-0 pb-[100px]">
+            jfghfgdfghkjfd
+        </section>
+    )
 }
 export default Details;

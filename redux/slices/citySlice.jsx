@@ -1,5 +1,6 @@
-"use client"
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// features/counterSlice.js
+
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"; 
 import axios from "axios";
 
 
@@ -9,12 +10,12 @@ const isBrowser = typeof window !== "undefined";
 const initialState = {
 
   listingResult: [],
+//   filterResult: [],
   listofHotel :[],
-  filterResult: [],
-  currency:isBrowser ? localStorage.getItem('globalCurrency'):"INR",
-  currIcon:isBrowser? localStorage.getItem('globalFlag'):'twemoji:flag-india',
-  resultCount:0,
-  pageNumber:1
+//   currency:isBrowser ? localStorage.getItem('globalCurrency'):"INR",
+//   currIcon:isBrowser? localStorage.getItem('globalFlag'):'twemoji:flag-india',
+//   resultCount:0,
+//   pageNumber:1
 };
 
 
@@ -22,8 +23,7 @@ const initialState = {
 export const getListOfHotel = createAsyncThunk(
   "list/hotel/listing",
   async (searchKey, thunkAPI) => {
-      const API_URL = `${HOTEL_NEW_API_BASE_URL}/api/search/GetResponse?Key=${searchKey}`;
-      console.log({API_URL});
+      const API_URL = `${HOTEL_NEW_API_BASE_URL}hotelsearch//api/search/GetResponse?Key=${searchKey}`;
       const MAX_RETRIES = 10;
       let count = 0;
       while (count < MAX_RETRIES) {
@@ -64,19 +64,19 @@ export const counterSlice = createSlice({
       console.log("now action is start", action?.payload?.ListOfHotels)
       state.listofHotel = action.payload
     },
-    setCurrencyInStore(state,action){
-      console.log("currency dispacth", action.payload)
-      state.currency = action.payload
-    },
-    setIconCurr(state,action){
-      state.currIcon= action.payload
-    },
-    setResultCount(state,action){
-      state.resultCount = action.payload
-    },
-    setPageNumber(state,action){
-      state.pageNumber= action.payload
-    }
+    // setCurrencyInStore(state,action){
+    //   console.log("currency dispacth", action.payload)
+    //   state.currency = action.payload
+    // },
+    // setIconCurr(state,action){
+    //   state.currIcon= action.payload
+    // },
+    // setResultCount(state,action){
+    //   state.resultCount = action.payload
+    // },
+    // setPageNumber(state,action){
+    //   state.pageNumber= action.payload
+    // }
     
   },
   extraReducers: (builder) => {
@@ -93,7 +93,9 @@ export const counterSlice = createSlice({
 });
 
 // Export actions
-export const { resetListingResult ,setListofHotel,setCurrencyInStore,setIconCurr,setResultCount,setPageNumber} = counterSlice.actions;
+export const { resetListingResult ,setListofHotel
+    // ,setCurrencyInStore,setIconCurr,setResultCount,setPageNumber
+} = counterSlice.actions;
 
 // Export reducer
 export default counterSlice.reducer;

@@ -1,16 +1,10 @@
-import React, { Suspense } from "react";
-import ParentDetail from '../../../components/detail/ParentDetail'
+import React from "react";
+import ParentDetail from '../../../components/ParentDetail';
 
-
-
-export default function DynamicDetails() {
-
-    return (
-      <Suspense fallback={<div>Loading...</div>}>
-      <section>
-          <ParentDetail/> 
-         
-      </section>
-      </Suspense>
+export default function DynamicDetails(){
+    return(
+        <section>
+            <ParentDetail/>
+        </section>
     )
-  }
+}
