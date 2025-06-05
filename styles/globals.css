@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.slick-list {margin: 0 -10px;}
+.slick-slide>div {padding: 0 10px;}
+
+.roomType {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex
+;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    line-height: 40px;
+    background: #f8f8f8;
+    border: 1px solid #e8e8e8;
+    border-bottom: 0;
+}
+
+.roomType .columns {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex
+;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 38px;
+    color: #414141;
+}
+
+.roomType .roomNo {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 38px;
+    background: #00808a;
+    color: #fff;
+    padding: 0 15px;
+}
+
+.roomType span:last-child {
+    border: 0;
+}
+
+.roomType span {
+    padding: 0 10px;
+    border-right: 1px solid #e8e8e8;
+}
+
+.roomType strong {
+    color: #414141;
+    font-weight: 500;
+}
+
+.oneSection {
+    padding: 20px;
+    border: 1px solid #e8e8e8;
+}
+
+.customerinfo {
+    background: #f8f8f8;
+    background: #f1f1f1;
+    color: #000;
+    font-size: 14px;
+}
+
+.customerinfo table {
+    width: 100%;
+    -webkit-border-radius: 6px 6px 6px 6px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    -ms-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+    border: 1px solid #e2e2e3;
+    border-spacing: 0;
+}
+
+.customerinfo th {
+    font-weight: 500;
+    background: #f9fafb;
+}
+
+.customerinfo td, .customerinfo th {
+    padding: 15px;
+    border: 1px solid #e2e2e3;
+}
+
+.customerinfo th:first-child {
+    -webkit-border-radius: 6px 0 0 0;
+    -moz-border-radius: 6px 0 0 0;
+    -ms-border-radius: 6px 0 0 0;
+    border-radius: 6px 0 0 0;
+}
+
+.customerinfo th {
+    font-weight: 500;
+    background: #f9fafb;
+}
+
+.customerinfo td, .customerinfo th {
+    padding: 15px;
+    border: 1px solid #e2e2e3;
+}
+
+
+.sucssmsg {
+    font-size: 36px;
+    line-height: 43px;
+    color: #006d1d;
+    font-weight: 300;
+    margin: 20px 0;
+}
+
+
+.sucssContiner{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+}
+
+.mhConfirmationPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.alignCenter {
+    display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+}

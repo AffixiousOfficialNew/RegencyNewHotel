@@ -1,0 +1,704 @@
+"use client";
+import React, { useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  Input,
+  NumberInput,
+  Autocomplete,
+  AutocompleteItem,
+} from "@heroui/react";
+import { useForm, Controller } from "react-hook-form";
+
+export const ContactDetails = ({ formData = {}, setFormData = () => {}, onSubmit, form }) => {
+  const {
+    control,
+    watch,
+    formState: { errors },
+  } = form
+
+  const countryCodes = [
+    { label: "United States (+1)", value: "US" },
+    { label: "India (+91)", value: "IN" },
+    { label: "United Kingdom (+44)", value: "UK" },
+    { label: "Qatar (+974)", value: "QA" },
+    { label: "United Arab Emirates (+971)", value: "AE" },
+  ];
+
+const Country_telcode = [
+    { value: "+93", label: "Afghanistan (+93)", id: '1' },
+    { value: "+355", label: "Albania (+355)", id: '2' },
+    { value: "+213", label: "Algeria (+213)", id: '3' },
+    { value: "+1-684", label: "American Samoa (+1-684)", id: '4' },
+    { value: "+376", label: "Andorra (+376)", id: '5' },
+    { value: "+244", label: "Angola (+244)", id: '6' },
+    { value: "+1-264", label: "Anguilla (+1-264)", id: '7' },
+    { value: "+672", label: "Antarctica (+672)", id: '8' },
+    { value: "+1-268", label: "Antigua and Barbuda (+1-268)", id: '9' },
+    { value: "+54", label: "Argentina (+54)", id: '10' },
+    { value: "+374", label: "Armenia (+374)", id: '11' },
+    { value: "+297", label: "Aruba (+297)", id: '12' },
+    { value: "+61", label: "Australia (+61)", id: '13' },
+    { value: "+43", label: "Austria (+43)", id: '14' },
+    { value: "+994", label: "Azerbaijan (+994)", id: '15' },
+    { value: "+1-242", label: "Bahamas (+1-242)", id: '16' },
+    { value: "+973", label: "Bahrain (+973)", id: '17' },
+    { value: "+880", label: "Bangladesh (+880)", id: '18' },
+    { value: "+1-246", label: "Barbados (+1-246)", id: '19' },
+    { value: "+375", label: "Belarus (+375)", id: '20' },
+    { value: "+32", label: "Belgium (+32)", id: '21' },
+    { value: "+501", label: "Belize (+501)", id: '22' },
+    { value: "+229", label: "Benin (+229)", id: '23' },
+    { value: "+1-441", label: "Bermuda (+1-441)", id: '24' },
+    { value: "+975", label: "Bhutan (+975)", id: '25' },
+    { value: "+591", label: "Bolivia, Plurinational State of (+591)", id: '26' },
+    { value: "+387", label: "Bosnia and Herzegovina (+387)", id: '27' },
+    { value: "+267", label: "Botswana (+267)", id: '28' },
+    { value: "+55", label: "Brazil (+55)", id: '29' },
+    { value: "+246", label: "British Indian Ocean Territory (+246)", id: '30' },
+    { value: "+673", label: "Brunei Darussalam (+673)", id: '31' },
+    { value: "+359", label: "Bulgaria (+359)", id: '32' },
+    { value: "+226", label: "Burkina Faso (+226)", id: '33' },
+    { value: "+257", label: "Burundi (+257)", id: '34' },
+    { value: "+855", label: "Cambodia (+855)", id: '35' },
+    { value: "+237", label: "Cameroon (+237)", id: '36' },
+    { value: "+1", label: "Canada (+1)", id: '37' },
+    { value: "+238", label: "Cape Verde (+238)", id: '38' },
+    { value: "+1-345", label: "Cayman Islands (+1-345)", id: '39' },
+    { value: "+236", label: "Central African Republic (+236)", id: '40' },
+    { value: "+235", label: "Chad (+235)", id: '41' },
+    { value: "+56", label: "Chile (+56)", id: '42' },
+    { value: "+86", label: "China (+86)", id: '43' },
+    { value: "+57", label: "Colombia (+57)", id: '44' },
+    { value: "+269", label: "Comoros (+269)", id: '45' },
+    { value: "+242", label: "Congo (+242)", id: '46' },
+    { value: "+243", label: "Congo, the Democratic Republic of the (+243)", id: '47' },
+    { value: "+682", label: "Cook Islands (+682)", id: '48' },
+    { value: "+506", label: "Costa Rica (+506)", id: '49' },
+    { value: "+385", label: "Croatia (+385)", id: '50' },
+    { value: "+53", label: "Cuba (+53)", id: '51' },
+    { value: "+599", label: "Curaçao (+599)", id: '52' },
+    { value: "+357", label: "Cyprus (+357)", id: '53' },
+    { value: "+420", label: "Czech Republic (+420)", id: '54' },
+    { value: "+225", label: "Côte d'Ivoire (+225)", id: '55' },
+    { value: "+45", label: "Denmark (+45)", id: '56' },
+    { value: "+253", label: "Djibouti (+253)", id: '57' },
+    { value: "+1-767", label: "Dominica (+1-767)", id: '58' },
+    { value: "+1-809", label: "Dominican Republic (+1-809)", id: '59' },
+    { value: "+1-829", label: "Dominican Republic (+1-829)", id: '60' },
+    { value: "+1-849", label: "Dominican Republic (+1-849)", id: '61' },
+    { value: "+593", label: "Ecuador (+593)", id: '62' },
+    { value: "+20", label: "Egypt (+20)", id: '63' },
+    { value: "+503", label: "El Salvador (+503)", id: '64' },
+    { value: "+240", label: "Equatorial Guinea (+240)", id: '65' },
+    { value: "+291", label: "Eritrea (+291)", id: '66' },
+    { value: "+372", label: "Estonia (+372)", id: '67' },
+    { value: "+251", label: "Ethiopia (+251)", id: '68' },
+    { value: "+500", label: "Falkland Islands (Malvinas) (+500)", id: '69' },
+    { value: "+298", label: "Faroe Islands (+298)", id: '70' },
+    { value: "+679", label: "Fiji (+679)", id: '71' },
+    { value: "+358", label: "Finland (+358)", id: '72' },
+    { value: "+33", label: "France (+33)", id: '73' },
+    { value: "+594", label: "French Guiana (+594)", id: '74' },
+    { value: "+689", label: "French Polynesia (+689)", id: '75' },
+    { value: "+262", label: "French Southern Territories (+262)", id: '76' },
+    { value: "+241", label: "Gabon (+241)", id: '77' },
+    { value: "+220", label: "Gambia (+220)", id: '78' },
+    { value: "+995", label: "Georgia (+995)", id: '79' },
+    { value: "+49", label: "Germany (+49)", id: '80' },
+    { value: "+233", label: "Ghana (+233)", id: '81' },
+    { value: "+350", label: "Gibraltar (+350)", id: '82' },
+    { value: "+30", label: "Greece (+30)", id: '83' },
+    { value: "+299", label: "Greenland (+299)", id: '84' },
+    { value: "+1-473", label: "Grenada (+1-473)", id: '85' },
+    { value: "+590", label: "Guadeloupe (+590)", id: '86' },
+    { value: "+1-671", label: "Guam (+1-671)", id: '87' },
+    { value: "+502", label: "Guatemala (+502)", id: '88' },
+    { value: "+224", label: "Guinea (+224)", id: '89' },
+    { value: "+245", label: "Guinea-Bissau (+245)", id: '90' },
+    { value: "+592", label: "Guyana (+592)", id: '91' },
+    { value: "+509", label: "Haiti (+509)", id: '92' },
+    { value: "+39-06", label: "Holy See (Vatican City State) (+39-06)", id: '93' },
+    { value: "+504", label: "Honduras (+504)", id: '94' },
+    { value: "+852", label: "Hong Kong (+852)", id: '95' },
+    { value: "+36", label: "Hungary (+36)", id: '96' },
+    { value: "+354", label: "Iceland (+354)", id: '97' },
+    { value: "+91", label: "India (+91)", id: '98' },
+    { value: "+62", label: "Indonesia (+62)", id: '99' },
+    { value: "+98", label: "Iran, Islamic Republic of( +98)", id: '100' },
+    { value: "+964", label: "Iraq (+964)", id: '101' },
+    { value: "+353", label: "Ireland (+353)", id: '102' },
+    { value: "+972", label: "Israel (+972)", id: '103' },
+    { value: "+39", label: "Italy (+39)", id: '104' },
+    { value: "+1-876", label: "Jamaica (+1-876)", id: '105' },
+    { value: "+81", label: "Japan (+81)", id: '106' },
+    { value: "+962", label: "Jordan (+962)", id: '107' },
+    { value: "+7", label: "Kazakhstan (+7)", id: '108' },
+    { value: "+254", label: "Kenya (+254)", id: '109' },
+    { value: "+686", label: "Kiribati (+686)", id: '110' },
+    { value: "+850", label: "Korea, Democratic People's Republic of (+850)", id: '111' },
+    { value: "+82", label: "Korea, Republic of (+82)", id: '112' },
+    { value: "+965", label: "Kuwait (+965)", id: '113' },
+    { value: "+996", label: "Kyrgyzstan (+996)", id: '114' },
+    { value: "+856", label: "Lao People's Democratic Republic (+856)", id: '115' },
+    { value: "+371", label: "Latvia (+371)", id: '116' },
+    { value: "+961", label: "Lebanon (+961)", id: '117' },
+    { value: "+266", label: "Lesotho (+266)", id: '118' },
+    { value: "+231", label: "Liberia (+231)", id: '119' },
+    { value: "+218", label: "Libya (+218)", id: '120' },
+    { value: "+423", label: "Liechtenstein (+423)", id: '121' },
+    { value: "+370", label: "Lithuania (+370)", id: '122' },
+    { value: "+352", label: "Luxembourg (+352)", id: '123' },
+    { value: "+853", label: "Macao (+853)", id: '124' },
+    { value: "+389", label: "Macedonia, the Former Yugoslav Republic of (+389)", id: '125' },
+    { value: "+261", label: "Madagascar (+261)", id: '126' },
+    { value: "+265", label: "Malawi (+265)", id: '127' },
+    { value: "+60", label: "Malaysia (+60)", id: '128' },
+    { value: "+960", label: "Maldives (+960)", id: '129' },
+    { value: "+223", label: "Mali (+223)", id: '130' },
+    { value: "+356", label: "Malta (+356)", id: '131' },
+    { value: "+692", label: "Marshall Islands (+692)", id: '132' },
+    { value: "+596", label: "Martinique (+596)", id: '133' },
+    { value: "+222", label: "Mauritania (+222)", id: '134' },
+    { value: "+230", label: "Mauritius (+230)", id: '135' },
+    { value: "+52", label: "Mexico (+52)", id: '136' },
+    { value: "+691", label: "Micronesia, Federated States of (+691)", id: '137' },
+    { value: "+373", label: "Moldova, Republic of (+373)", id: '138' },
+    { value: "+377", label: "Monaco (+377)", id: '139' },
+    { value: "+976", label: "Mongolia (+976)", id: '140' },
+    { value: "+382", label: "Montenegro (+382)", id: '145' },
+    { value: "+1-664", label: "Montserrat (+1-664)", id: '146' },
+    { value: "+212", label: "Morocco (+212)", id: '147' },
+    { value: "+258", label: "Mozambique (+258)", id: '148' },
+    { value: "+95", label: "Myanmar (+95)", id: '149' },
+    { value: "+264", label: "Namibia (+264)", id: '150' },
+    { value: "+674", label: "Nauru (+674)", id: '151' },
+    { value: "+977", label: "Nepal (+977)", id: '152' },
+    { value: "+31", label: "Netherlands (+31)", id: '153' },
+    { value: "+687", label: "New Caledonia (+687)", id: '154' },
+    { value: "+64", label: "New Zealand (+64)", id: '155' },
+    { value: "+505", label: "Nicaragua (+505)", id: '156' },
+    { value: "+227", label: "Niger (+227)", id: '157' },
+    { value: "+234", label: "Nigeria (+234)", id: '158' },
+    { value: "+683", label: "Niue (+683)", id: '159' },
+    { value: "+1-670", label: "Northern Mariana Islands (+1-670)", id: '160' },
+    { value: "+47", label: "Norway (+47)", id: '161' },
+    { value: "+968", label: "Oman (+968)", id: '162' },
+    { value: "+92", label: "Pakistan (+92)", id: '163' },
+    { value: "+680", label: "Palau (+680)", id: '164' },
+    { value: "+970", label: "Palestine, State of (+970)", id: '165' },
+    { value: "+507", label: "Panama (+507)", id: '166' },
+    { value: "+675", label: "Papua New Guinea (+675)", id: '167' },
+    { value: "+595", label: "Paraguay (+595)", id: '168' },
+    { value: "+51", label: "Peru( +51)", id: '169' },
+    { value: "+63", label: "Philippines (+63)", id: '170' },
+    { value: "+870", label: "Pitcairn (+870)", id: '171' },
+    { value: "+48", label: "Poland (+48)", id: '172' },
+    { value: "+351", label: "Portugal (+351)", id: '173' },
+    { value: "+1", label: "Puerto Rico (+1)", id: '174' },
+    { value: "+974", label: "Qatar (+974)", id: '175' },
+    { value: "+40", label: "Romania (+40)", id: '176' },
+    { value: "+7", label: "Russian Federation (+7)", id: '177' },
+    { value: "+250", label: "Rwanda (+250)", id: '178' },
+    { value: "+590", label: "Saint Barthélemy (+590)", id: '179' },
+    { value: "+290", label: "Saint Helena, Ascension and Tristan da Cunha (+290)", id: '180' },
+    { value: "+1-869", label: "Saint Kitts and Nevis (+1-869)", id: '181' },
+    { value: "+1-758", label: "Saint Lucia (+1-758)", id: '182' },
+    { value: "+590", label: "Saint Martin (French part) (+590)", id: '183' },
+    { value: "+508", label: "Saint Pierre and Miquelon (+508)", id: '184' },
+    { value: "+1-784", label: "Saint Vincent and the Grenadines (+1-784)", id: '185' },
+    { value: "+685", label: "Samoa (+685)", id: '186' },
+    { value: "+378", label: "San Marino (+378)", id: '187' },
+    { value: "+239", label: "Sao Tome and Principe (+239)", id: '189' },
+    { value: "+966", label: "Saudi Arabia (+966)", id: '190' },
+    { value: "+221", label: "Senegal (+221)", id: '191' },
+    { value: "+381", label: "Serbia (+381)", id: '192' },
+    { value: "+248", label: "Seychelles (+248)", id: '193' },
+    { value: "+232", label: "Sierra Leone (+232)", id: '194' },
+    { value: "+65", label: "Singapore (+65)", id: '195' },
+    { value: "+1-721", label: "Sint Maarten (Dutch part) (+1-721)", id: '196' },
+    { value: "+421", label: "Slovakia (+421)", id: '197' },
+    { value: "+386", label: "Slovenia (+386)", id: '198' },
+    { value: "+677", label: "Solomon Islands (+677)", id: '199' },
+    { value: "+252", label: "Somalia (+252)", id: '200' },
+    { value: "+27", label: "South Africa (+27)", id: '201' },
+    { value: "+211", label: "South Sudan (+211)", id: '202' },
+    { value: "+34", label: "Spain (+34)", id: '203' },
+    { value: "+94", label: "Sri Lanka (+94)", id: '204' },
+    { value: "+249", label: "Sudan (+249)", id: '205' },
+    { value: "+597", label: "Suriname (+597)", id: '206' },
+    { value: "+268", label: "Swaziland (+268)", id: '207' },
+    { value: "+46", label: "Sweden (+46)", id: '208' },
+    { value: "+41", label: "Switzerland (+41)", id: '209' },
+    { value: "+963", label: "Syrian Arab Republic (+963)", id: '210' },
+    { value: "+886", label: "Taiwan, Province of China (+886)", id: '211' },
+    { value: "+992", label: "Tajikistan (+992)", id: '212' },
+    { value: "+255", label: "Tanzania, United Republic of (+255)", id: '213' },
+    { value: "+66", label: "Thailand (+66)", id: '214' },
+    { value: "+670", label: "Timor-Leste (+670)", id: '215' },
+    { value: "+228", label: "Togo (+228)", id: '216' },
+    { value: "+690", label: "Tokelau (+690)", id: '217' },
+    { value: "+676", label: "Tonga (+676)", id: '218' },
+    { value: "+1-868", label: "Trinidad and Tobago (+1-868)", id: '219' },
+    { value: "+216", label: "Tunisia (+216)", id: '220' },
+    { value: "+90", label: "Turkey (+90)", id: '221' },
+    { value: "+993", label: "Turkmenistan (+993)", id: '222' },
+    { value: "+1-649", label: "Turks and Caicos Islands (+1-649)", id: '223' },
+    { value: "+688", label: "Tuvalu (+688)", id: '224' },
+    { value: "+256", label: "Uganda (+256)", id: '225' },
+    { value: "+380", label: "Ukraine (+380)", id: '226' },
+    { value: "+971", label: "United Arab Emirates (+971)", id: '227' },
+    { value: "+44", label: "United Kingdom (+44)", id: '228' },
+    { value: "+1", label: "United States (+1)", id: '229' },
+    { value: "+598", label: "Uruguay (+598)", id: '230' },
+    { value: "+998", label: "Uzbekistan (+998)", id: '231' },
+    { value: "+678", label: "Vanuatu (+678)", id: '232' },
+    { value: "+58", label: "Venezuela, Bolivarian Republic of (+58)", id: '233' },
+    { value: "+84", label: "Viet Nam (+84)", id: '234' },
+    { value: "+1-284", label: "Virgin Islands, British (+1-284)", id: '235' },
+    { value: "+1-340", label: "Virgin Islands, U.S. (+1-340)", id: '236' },
+    { value: "+681", label: "Wallis and Futuna (+681)", id: '237' },
+    { value: "+212", label: "Western Sahara (+212)", id: '238' },
+    { value: "+967", label: "Yemen (+967)", id: '239' },
+    { value: "+260", label: "Zambia (+260)", id: '240' },
+    { value: "+263", label: "Zimbabwe (+263)", id: '241' },
+    { value: "+358", label: "Åland Islands (+358)", id: '242' }
+  ];
+
+  const Nationality = [
+    { value: "AF", text: "Afghanistan", id: '1' },
+    { value: "AL", text: "Albania", id: '2' },
+    { value: "DZ", text: "Algeria", id: '3' },
+    { value: "AS", text: "American Samoa", id: '4' },
+    { value: "AD", text: "Andorra", id: '5' },
+    { value: "AO", text: "Angola", id: '6' },
+    { value: "AI", text: "Anguilla", id: '7' },
+    { value: "AQ", text: "Antarctica", id: '8' },
+    { value: "AG", text: "Antigua and Barbuda", id: '9' },
+    { value: "AR", text: "Argentina", id: '10' },
+    { value: "AM", text: "Armenia", id: '11' },
+    { value: "AW", text: "Aruba", id: '12' },
+    { value: "AU", text: "Australia", id: '13' },
+    { value: "AT", text: "Austria", id: '14' },
+    { value: "AZ", text: "Azerbaijan", id: '15' },
+    { value: "BS", text: "Bahamas", id: '16' },
+    { value: "BH", text: "Bahrain", id: '17' },
+    { value: "BD", text: "Bangladesh", id: '18' },
+    { value: "BB", text: "Barbados", id: '19' },
+    { value: "BY", text: "Belarus", id: '20' },
+    { value: "BE", text: "Belgium", id: '21' },
+    { value: "BZ", text: "Belize", id: '22' },
+    { value: "BJ", text: "Benin", id: '23' },
+    { value: "BM", text: "Bermuda", id: '24' },
+    { value: "BT", text: "Bhutan", id: '25' },
+    { value: "BO", text: "Bolivia", id: '26' },
+    { value: "BA", text: "Bosnia and Herzegovina", id: '27' },
+    { value: "BW", text: "Botswana", id: '28' },
+    { value: "BV", text: "Bouvet Island", id: '29' },
+    { value: "BR", text: "Brazil", id: '30' },
+    { value: "IO", text: "British Indian Ocean Territory", id: '31' },
+    { value: "VG", text: "British Virgin Islands", id: '32' },
+    { value: "BN", text: "Brunei", id: '33' },
+    { value: "BG", text: "Bulgaria", id: '34' },
+    { value: "BF", text: "Burkina Faso", id: '35' },
+    { value: "BI", text: "Burundi", id: '36' },
+    { value: "KH", text: "Cambodia", id: '37' },
+    { value: "CM", text: "Cameroon", id: '38' },
+    { value: "CA", text: "Canada", id: '39' },
+    { value: "CV", text: "Cape Verde", id: '40' },
+    { value: "KY", text: "Cayman Islands", id: '41' },
+    { value: "CF", text: "Central African Republic", id: '42' },
+    { value: "TD", text: "Chad", id: '43' },
+    { value: "CL", text: "Chile", id: '44' },
+    { value: "CN", text: "China", id: '45' },
+    { value: "CZ", text: "Czech", id: '46' },
+    { value: "CX", text: "Christmas Island", id: '47' },
+    { value: "CC", text: "Cocos [Keeling] Islands", id: '48' },
+    { value: "CO", text: "Colombia", id: '49' },
+    { value: "KM", text: "Comoros", id: '50' },
+    { value: "CK", text: "Cook Islands", id: '51' },
+    { value: "CR", text: "Costa Rica", id: '52' },
+    { value: "HR", text: "Croatia", id: '53' },
+    { value: "CU", text: "Cuba", id: '54' },
+    { value: "CW", text: "Curacao", id: '55' },
+    { value: "CY", text: "Cyprus", id: '56' },
+    { value: "EZ", text: "Czechia", id: '57' },
+    { value: "CD", text: "Democratic Republic of the Congo", id: '58' },
+    { value: "DK", text: "Denmark", id: '59' },
+    { value: "DJ", text: "Djibouti", id: '60' },
+    { value: "DM", text: "Dominica", id: '61' },
+    { value: "DO", text: "Dominican Republic", id: '62' },
+    { value: "TL", text: "East Timor", id: '63' },
+    { value: "EC", text: "Ecuador", id: '64' },
+    { value: "EG", text: "Egypt", id: '65' },
+    { value: "SV", text: "El Salvador", id: '66' },
+    { value: "GQ", text: "Equatorial Guinea", id: '67' },
+    { value: "ER", text: "Eritrea", id: '68' },
+    { value: "EE", text: "Estonia", id: '69' },
+    { value: "ET", text: "Ethiopia", id: '70' },
+    { value: "FK", text: "Falkland Islands", id: '71' },
+    { value: "FO", text: "Faroe Islands", id: '72' },
+    { value: "SO", text: "Federal Republic of Somalia", id: '73' },
+    { value: "FM", text: "Federated States of Micronesia", id: '74' },
+    { value: "FJ", text: "Fiji", id: '75' },
+    { value: "FI", text: "Finland", id: '76' },
+    { value: "FR", text: "France", id: '77' },
+    { value: "GF", text: "French Guiana", id: '78' },
+    { value: "PF", text: "French Polynesia", id: '79' },
+    { value: "TF", text: "French Southern Territories", id: '80' },
+    { value: "GA", text: "Gabon", id: '81' },
+    { value: "GM", text: "Gambia", id: '82' },
+    { value: "GG", text: "Georgia", id: '83' },
+    { value: "DE", text: "Germany", id: '84' },
+    { value: "GH", text: "Ghana", id: '85' },
+    { value: "GI", text: "Gibraltar", id: '86' },
+    { value: "GR", text: "Greece", id: '87' },
+    { value: "GL", text: "Greenland", id: '88' },
+    { value: "GD", text: "Grenada", id: '89' },
+    { value: "GP", text: "Guadeloupe", id: '90' },
+    { value: "GU", text: "Guam", id: '91' },
+    { value: "GT", text: "Guatemala", id: '92' },
+    { value: "GG", text: "Guernsey", id: '93' },
+    { value: "GN", text: "Guinea", id: '94' },
+    { value: "PU", text: "Guinea", id: '95' },
+    { value: "GY", text: "Guyana", id: '96' },
+    { value: "HT", text: "Haiti", id: '97' },
+    { value: "HM", text: "Heard Island and McDonald Islands", id: '98' },
+    { value: "HN", text: "Honduras", id: '99' },
+    { value: "HK", text: "Hong Kong", id: '100' },
+    { value: "HU", text: "Hungary", id: '101' },
+    { value: "IS", text: "Iceland", id: '102' },
+    { value: "IN", text: "India", id: '103' },
+    { value: "ID", text: "Indonesia", id: '104' },
+    { value: "IR", text: "Iran", id: '105' },
+    { value: "IQ", text: "Iraq", id: '106' },
+    { value: "IE", text: "Ireland", id: '107' },
+    { value: "IM", text: "Isle of Man", id: '108' },
+    { value: "IL", text: "Israel", id: '109' },
+    { value: "IT", text: "Italy", id: '110' },
+    { value: "CI", text: "Ivory Coast", id: '111' },
+    { value: "JM", text: "Jamaica", id: '112' },
+    { value: "JP", text: "Japan", id: '113' },
+    { value: "JE", text: "Jersey", id: '114' },
+    { value: "JO", text: "Jordan", id: '115' },
+    { value: "KZ", text: "Kazakhstan", id: '116' },
+    { value: "KE", text: "Kenya", id: '117' },
+    { value: "KI", text: "Kiribati", id: '118' },
+    { value: "KV", text: "Kosovo", id: '119' },
+    { value: "KW", text: "Kuwait", id: '120' },
+    { value: "KG", text: "Kyrgyzstan", id: '121' },
+    { value: "LA", text: "Laos", id: '122' },
+    { value: "LV", text: "Latvia", id: '123' },
+    { value: "LB", text: "Lebanon", id: '124' },
+    { value: "LS", text: "Lesotho", id: '125' },
+    { value: "LR", text: "Liberia", id: '126' },
+    { value: "LY", text: "Libya", id: '127' },
+    { value: "LI", text: "Liechtenstein", id: '128' },
+    { value: "LT", text: "Lithuania", id: '129' },
+    { value: "LU", text: "Luxembourg", id: '130' },
+    { value: "MO", text: "Macao", id: '131' },
+    { value: "MK", text: "Macedonia", id: '132' },
+    { value: "MG", text: "Madagascar", id: '133' },
+    { value: "MW", text: "Malawi", id: '134' },
+    { value: "MY", text: "Malaysia", id: '135' },
+    { value: "MV", text: "Maldives", id: '136' },
+    { value: "ML", text: "Mali", id: '137' },
+    { value: "MT", text: "Malta", id: '138' },
+    { value: "MH", text: "Marshall Islands", id: '139' },
+    { value: "MQ", text: "Martinique", id: '140' },
+    { value: "MR", text: "Mauritania", id: '141' },
+    { value: "MU", text: "Mauritius", id: '142' },
+    { value: "YT", text: "Mayotte", id: '143' },
+    { value: "MX", text: "Mexico", id: '144' },
+    { value: "FM", text: "Micronesia", id: '145' },
+    { value: "MD", text: "Moldova", id: '146' },
+    { value: "MC", text: "Monaco", id: '147' },
+    { value: "MN", text: "Mongolia", id: '148' },
+    { value: "ME", text: "Montenegro", id: '149' },
+    { value: "MS", text: "Montserrat", id: '150' },
+    { value: "MA", text: "Morocco", id: '151' },
+    { value: "MZ", text: "Mozambique", id: '152' },
+    { value: "BM", text: "Myanmar [Burma]", id: '153' },
+    { value: "NA", text: "Namibia", id: '154' },
+    { value: "NT", text: "NATO countries", id: '155' },
+    { value: "NR", text: "Nauru", id: '156' },
+    { value: "NP", text: "Nepal", id: '157' },
+    { value: "NL", text: "Netherlands", id: '158' },
+    { value: "NC", text: "New Caledonia", id: '159' },
+    { value: "NZ", text: "New Zealand", id: '160' },
+    { value: "NI", text: "Nicaragua", id: '161' },
+    { value: "NE", text: "Niger", id: '162' },
+    { value: "NG", text: "Nigeria", id: '163' },
+    { value: "NU", text: "Niue", id: '164' },
+    { value: "NF", text: "Norfolk Island", id: '165' },
+    { value: "KN", text: "North Korea", id: '166' },
+    { value: "MP", text: "Northern Mariana Islands", id: '167' },
+    { value: "NO", text: "Norway", id: '168' },
+    { value: "NU", text: "NULL", id: '169' },
+    { value: "OM", text: "Oman", id: '170' },
+    { value: "PK", text: "Pakistan", id: '171' },
+    { value: "PW", text: "Palau", id: '172' },
+    { value: "PA", text: "Panama", id: '173' },
+    { value: "PG", text: "Papua New Guinea", id: '174' },
+    { value: "PY", text: "Paraguay", id: '175' },
+    { value: "PE", text: "Peru", id: '176' },
+    { value: "PH", text: "Philippines", id: '177' },
+    { value: "PN", text: "Pitcairn Islands", id: '178' },
+    { value: "PL", text: "Poland", id: '179' },
+    { value: "PT", text: "Portugal", id: '180' },
+    { value: "PR", text: "Puerto Rico", id: '181' },
+    { value: "QA", text: "Qatar", id: '182' },
+    { value: "CG", text: "Republic of the Congo", id: '183' },
+    { value: "RE", text: "Réunion", id: '184' },
+    { value: "RO", text: "Romania", id: '185' },
+    { value: "RU", text: "Russia", id: '186' },
+    { value: "RW", text: "Rwanda", id: '187' },
+    { value: "SH", text: "Saint Helena", id: '188' },
+    { value: "KN", text: "Saint Kitts and Nevis", id: '189' },
+    { value: "LC", text: "Saint Lucia", id: '190' },
+    { value: "MF", text: "Saint Martin", id: '191' },
+    { value: "PM", text: "Saint Pierre and Miquelon", id: '192' },
+    { value: "VC", text: "Saint Vincent and the Grenadines", id: '193' },
+    { value: "SM", text: "San Marino", id: '194' },
+    { value: "ST", text: "São Tomé and Príncipe", id: '195' },
+    { value: "SA", text: "Saudi Arabia", id: '196' },
+    { value: "SN", text: "Senegal", id: '197' },
+    { value: "RS", text: "Serbia", id: '198' },
+    { value: "SC", text: "Seychelles", id: '199' },
+    { value: "SL", text: "Sierra Leone", id: '200' },
+    { value: "SG", text: "Singapore", id: '201' },
+    { value: "SX", text: "Sint Maarten", id: '202' },
+    { value: "SK", text: "Slovakia", id: '203' },
+    { value: "SI", text: "Slovenia", id: '204' },
+    { value: "SB", text: "Solomon Islands", id: '205' },
+    { value: "SO", text: "Somalia", id: '206' },
+    { value: "ZA", text: "South Africa", id: '207' },
+    { value: "KS", text: "South Korea", id: '208' },
+    { value: "SS", text: "South Sudan", id: '209' },
+    { value: "ES", text: "Spain", id: '210' },
+    { value: "LK", text: "Sri Lanka", id: '211' },
+    { value: "SR", text: "Suriname", id: '212' },
+    { value: "SJ", text: "Svalbard", id: '213' },
+    { value: "SZ", text: "Swaziland", id: '214' },
+    { value: "SE", text: "Sweden", id: '215' },
+    { value: "CH", text: "Switzerland", id: '216' },
+    { value: "SY", text: "Syria", id: '217' },
+    { value: "TW", text: "Taiwan", id: '218' },
+    { value: "TJ", text: "Tajikistan", id: '219' },
+    { value: "TZ", text: "Tanzania", id: '220' },
+    { value: "TH", text: "Thailand", id: '221' },
+    { value: "TG", text: "Togo", id: '222' },
+    { value: "TO", text: "Tonga", id: '223' },
+    { value: "TT", text: "Trinidad and Tobago", id: '224' },
+    { value: "TN", text: "Tunisia", id: '225' },
+    { value: "TR", text: "Turkey", id: '226' },
+    { value: "TM", text: "Turkmenistan", id: '227' },
+    { value: "TC", text: "Turks and Caicos Islands", id: '228' },
+    { value: "TV", text: "Tuvalu", id: '229' },
+    { value: "UG", text: "Uganda", id: '230' },
+    { value: "UA", text: "Ukraine", id: '231' },
+    { value: "AE", text: "United Arab Emirates", id: '232' },
+    { value: "GB", text: "United Kingdom", id: '233' },
+    { value: "US", text: "United States of America", id: '234' },
+    { value: "VI", text: "United States Virgin Islands", id: '235' },
+    { value: "UY", text: "Uruguay", id: '236' },
+    { value: "UZ", text: "Uzbekistan", id: '237' },
+    { value: "VU", text: "Vanuatu", id: '238' },
+    { value: "VA", text: "Vatican City", id: '239' },
+    { value: "VE", text: "Venezuela", id: '240' },
+    { value: "VN", text: "Vietnam", id: '241' },
+    { value: "WF", text: "Wallis and Futuna", id: '242' },
+    { value: "YE", text: "Yemen", id: '243' },
+    { value: "ZM", text: "Zambia", id: '244' },
+    { value: "ZW", text: "Zimbabwe", id: '245' }
+  ]
+
+  // Sync form changes to parent
+  const values = watch();
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      contactDetails: values,
+    }));
+
+  }, [values]);
+  
+  const handleFormSubmit = (data) => {
+    console.log("📨 Contact Form Data:", data);
+    onSubmit(data); // Pass data to parent
+  };
+  return (
+    <Card className="shadow-sm">
+      <CardBody className="border shadow-xl">
+        <h2 className="mb-2 text-xl font-semibold">Contact Details</h2>
+        
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            {/* Country Code */}
+            <div>
+              <Controller
+                name="countryCode"
+                control={control}
+                rules={{ required: "Country code is required" }}
+                render={({ field }) => (
+                  <Autocomplete
+                    variant="bordered"
+                    isRequired
+                    label="Country Code"
+                    placeholder="Select Country Code"
+                    selectedKey={field.value}
+                    onSelectionChange={(val) => field.onChange(val)}
+                    inputProps={{
+                      classNames: {
+                        input: "ml-1",
+                        inputWrapper: "h-[48px] rounded-[5px]",
+                      },
+                    }}
+                    listboxProps={{
+                      hideSelectedIcon: true,
+                      itemClasses: {
+                        base: "rounded-[5px]",
+                      },
+                    }}
+                  >
+                    {Country_telcode?.map((code) => (
+                      <AutocompleteItem key={code.value} value={code.value}>
+                        {code.label}
+                      </AutocompleteItem>
+                    ))}
+                  </Autocomplete>
+                )}
+              />
+              {errors.countryCode && (
+                <p className="text-red-500 text-sm mt-1">{errors.countryCode.message}</p>
+              )}
+            </div>
+
+            {/* Mobile Number */}
+            <Controller
+  name="mobile"
+  control={control}
+  rules={{
+    required: "Mobile number is required",
+    pattern: {
+      value: /^[0-9]{6,15}$/, // Accepts 6 to 15 digits
+      message: "Invalid mobile number",
+    },
+  }}
+  render={({ field }) => (
+    <Input
+      {...field}
+      maxLength={15}
+      type="text"
+      isRequired
+      variant="bordered"
+      label="Mobile No"
+      placeholder="Enter Mobile No"
+      classNames={{
+        input: "ml-1",
+        inputWrapper: "h-[48px] rounded-[5px]",
+      }}
+      onInput={(e) => {
+        // Allow only digits
+        const onlyNums = e.target.value.replace(/\D/g, "");
+        e.target.value = onlyNums;
+        field.onChange(onlyNums);
+      }}
+      onKeyDown={(e) => {
+        // Block invalid keys (allow: digits, backspace, arrows)
+        const allowedKeys = [
+          "Backspace", "ArrowLeft", "ArrowRight", "Tab", "Delete",
+        ];
+        if (
+          !/[0-9]/.test(e.key) &&
+          !allowedKeys.includes(e.key)
+        ) {
+          e.preventDefault();
+        }
+      }}
+    />
+  )}
+/>
+
+{errors.mobile && (
+  <p className="text-red-500 text-sm mt-1">{errors.mobile.message}</p>
+)}
+
+
+            {/* Nationality */}
+            <div>
+              <Controller
+                name="nationality"
+                control={control}
+                rules={{ required: "Nationality is required" }}
+                render={({ field }) => (
+                  <Autocomplete
+                    isRequired
+                    variant="bordered"
+                    label="Nationality"
+                    placeholder="Select Nationality"
+                    selectedKey={field.value}
+                    onSelectionChange={(val) => field.onChange(val)}
+                    inputProps={{
+                      classNames: {
+                        input: "ml-1",
+                        inputWrapper: "h-[48px] rounded-[5px]",
+                      },
+                    }}
+                    listboxProps={{
+                      hideSelectedIcon: true,
+                      itemClasses: {
+                        base: "rounded-[5px]",
+                      },
+                    }}
+                  >
+                    {Nationality.map((item) => (
+                      <AutocompleteItem key={item.value} value={item.value}>
+                        {item.text}
+                      </AutocompleteItem>
+                    ))}
+                  </Autocomplete>
+                )}
+              />
+              {errors.nationality && (
+                <p className="text-red-500 text-sm mt-1">{errors.nationality.message}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div>
+              <Controller
+                name="email"
+                control={control}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email address",
+                  },
+                }}
+                render={({ field }) => (
+                  <Input
+                    isRequired
+                    type="email"
+                    label="Email"
+                    variant="bordered"
+                    placeholder="Enter your email address"
+                    className="w-full"
+                    classNames={{
+                      input: "ml-1",
+                      inputWrapper: "h-[48px] rounded-[5px]",
+                    }}
+                    {...field}
+                  />
+                )}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+          </div>
+   
+      </CardBody>
+    </Card>
+  );
+};
