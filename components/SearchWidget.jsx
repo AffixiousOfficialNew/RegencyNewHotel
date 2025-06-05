@@ -13,18 +13,33 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {setCityName,setPropertyName}  from "../redux/slices/searchSlice"
 const SearchWidget = () => {
-  const locationNames = [
-    { label: "Doha", key: "doha" },
-    { label: "Dohan", key: "dohan" },
-  ];
+  // const locationNames = [
+  //   { label: "Doha", key: "doha" },
+  //   { label: "Dohan", key: "dohan" },
+  // ];
   const currentDate = today(getLocalTimeZone());
+  const [isMobile, setIsMobile] = useState(false);
+  const [citySuggestion, setCitySiggeston] = useState([]);
+  const [selectedCity, setSelectedCity] = useState('');
+  const [cityName, setCityName] = useState("")
   const [selectedDates, setSelectedDates] = useState({
     start: currentDate,
     end: currentDate.add({ days: 2 }),
   });
+  const dispatch = useDispatch();
 
-  const [isMobile, setIsMobile] = useState(false);
+
+
+  const getCityName = useSelector((state) => state?.search?.cityName)
+
+  useEffect(() =>{
+    setCityName(getCityName)
+  },[getCityName])
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -103,9 +118,9 @@ const SearchWidget = () => {
       prev.map((room, i) =>
         i === index
           ? {
-              ...room,
-              adults: Math.min(MAX_ADULTS, Math.max(1, room.adults + delta)),
-            }
+            ...room,
+            adults: Math.min(MAX_ADULTS, Math.max(1, room.adults + delta)),
+          }
           : room
       )
     );
@@ -123,11 +138,60 @@ const SearchWidget = () => {
     setIsOpen(false);
   };
 
+  const handleAutoSuggestion = async (value) => {
+    console.log("data")
+    const respose = await axios.get(`https://stg.myholidays.com/autosuggest/api/DestinationAutoComplete?prefix=${value}`)
+    const data = respose.data;
+    setCitySiggeston(data)
+  }
+
+  const handleInputChange = async (value) => {
+    const inputValue = value
+
+    if (inputValue.length > 2) {
+      await handleAutoSuggestion(inputValue)
+    }
+     else if (inputValue.length === 0) {
+      setCitySiggeston([])
+
+    }
+  }
+
+  const handleSuggestionSelection = () => {
+    const selectedCity = citySuggestion.find(
+      item => item.DestinationName
+    )
+    console.log("object",selectedCity)
+    if(selectedCity){
+    setSelectedCity(selectedCity)
+    useDispatch(setCityName(selectedCity.CityName))
+    
+    }
+    
+  }
+
+  const handleSearchBtn = async () => {
+    const url = `https://www.regencyholidays.com/hotels/hotellist?destinationCode=ChIJD_b8TgD9DDkRykmX-S-DzmU&checkIn=14%20Jun%202025&checkOut=21%20Jun%202025&noOfRoom=1&destinationCity=Delhi%20junction%20railway%20station&category=Landmark&currency=INR&culture=en-GB&paxInfo=AA$|&zone=null&country=Zorawar%20Singh%20Marg,%20Mori%20Gate,%20New%20Delhi,%20Delhi,%20India&countryCode=null&affiliate=0`
+
+    const respose = await axios.get(url)
+    const data = respose.data;
+
+
+  }
+
+  console.log("selectedCity",selectedCity)
+
+
   return (
     <div className="bg-[#174982] py-5">
       <div className="container mx-auto px-2 xl:px-0">
         <div className="flex items-center justify-center gap-2">
+        
+        
+          
+        
           <Autocomplete
+            inputValue={cityName}
             variant="bordered"
             isRequired
             placeholder="Enter Location or Hotel Name"
@@ -137,15 +201,21 @@ const SearchWidget = () => {
             inputProps={{
               classNames: {
                 inputWrapper: "bg-white h-[50px] rounded-[5px]",
-                listbox: "bg-black",
-                listboxWrapper: "bg-black",
-                popoverContent: "bg-black",
+               
               },
             }}
+            // onSelectionChange={handleSuggestionSelection}
+            // onInputChange={handleInputChange}
+
+
+
           >
-            {locationNames.map((locationName) => (
-              <AutocompleteItem key={locationName.key}>
-                {locationName.label}
+            {citySuggestion.map((item) => (
+              <AutocompleteItem key={item.DestinationCode}>
+                {item.CityName && item.CountryName
+                  ? `${item.CityName}, ${item.CountryName}`
+                  : item.CityName || item.CountryName}
+
               </AutocompleteItem>
             ))}
           </Autocomplete>
@@ -212,7 +282,7 @@ const SearchWidget = () => {
           />
 
           <div className="w-full">
-          
+
             <Popover
               isOpen={isOpen}
               onOpenChange={setIsOpen}
@@ -222,9 +292,9 @@ const SearchWidget = () => {
               classNames={{
                 base: "w-[270px]",
               }}
-             
+
             >
-              <PopoverTrigger  startContent={<Icon icon="fa-solid:users" width="25" height="25" />}>
+              <PopoverTrigger startContent={<Icon icon="fa-solid:users" width="25" height="25" />}>
                 <Button className="w-full rounded-[5px] min-h-[48px] md:border-none border-1 border-solid border-[#000000] bg-white md:bg-[#f4f4f5] justify-start">
                   {getSummary()}
                 </Button>
@@ -357,7 +427,9 @@ const SearchWidget = () => {
             </Popover>
           </div>
 
-          <Button className="h-[50px] bg-[#e41b23] w-[450px] rounded-[5px] text-[#ffffff] text-[16px] font-semibold">Modify Search</Button>
+          <Button className="h-[50px] bg-[#e41b23] w-[450px] rounded-[5px] text-[#ffffff] text-[16px] font-semibold"
+            onPress={handleSearchBtn}
+          >Modify Search</Button>
         </div>
       </div>
     </div>
