@@ -14,6 +14,7 @@ const initialState = {
 export const getInfo = createAsyncThunk(
     "list/hotel/details",
     async (hotelId, thunkAPI) => {
+        console.log({hotelId});
         const apiUrl = `${HOTEL_NEW_API_BASE_URL}hotelsearch//api/search/Info?propertyId=${hotelId}&cultureId=en-GB&Affiliate=0`;
         // https://prodapi.myholidays.com/hotelsearch/api/search/HotelInfo?propertyId=MH-00151158&cultureId=en-GB
     try {

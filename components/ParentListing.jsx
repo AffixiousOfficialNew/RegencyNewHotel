@@ -4,7 +4,9 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { getListOfHotel } from "../redux/slices/citySlice";
-import HotelListing from './listing/HotelListing'
+import HotelListing from './listing/HotelListing';
+import SearchWidget from './SearchWidget';
+import FilterListing from './FilterListing';
 
 
 
@@ -54,7 +56,9 @@ const Listing = () =>{
     console.log("new");
     return(
         <section>
-            <HotelListing/>
+           <SearchWidget/>
+           <FilterListing/>
+           <HotelListing/>
         </section>
     )
 }
