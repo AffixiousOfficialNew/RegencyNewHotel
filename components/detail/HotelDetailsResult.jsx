@@ -1,7 +1,22 @@
 import React from 'react';
-import {Image , Button} from "@heroui/react";
+import {Image , Button, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, TableHeader, TableBody, TableRow, TableCell, ModalFooter, Table, TableColumn} from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+
 const HotelDetailsResult=()=>{
+    const {details} = useSelector((state)=>state);
+    const AllImages = details?.detailResult[0]?.RoomImages?.Images?.filter(
+        (i) => i?.Caption?.toLowerCase() === "room"
+      );
+      const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    // console.log({aa:details?.detailResult[0]?.Info,aanch:details?.roomResult[0]?.ListOfRooms[0]?.ListOfRoom[0]?.RoomRates[0],AllImages});
+    const roomRes = details?.roomResult[0]?.RoomDetails[0] || [];
+    const date =(cncldd)=>{
+        const formattedDate = moment(cncldd).format('MMM D, YYYY');
+        // console.log(formattedDate); 
+        return formattedDate;
+    }
     return(
         <>
          <div className='bg-white border-t-1 border-b-1 border-solid border-[#dddddd] p-5 mb-5'>
@@ -22,6 +37,51 @@ const HotelDetailsResult=()=>{
          <div className='container mx-auto px-2 xl:px-0'>
            <div className='border-1 border-solid border-[#dddddd] mb-5'>
                 <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
+                {roomRes?.map((room, index) => (
+                    <><div 
+                    // key={index}
+                        className='border-r-1 border-solid border-[#dddddd] p-2'>
+                        <Image src={
+                            AllImages?.length &&
+                            AllImages[index % AllImages?.length]
+                            ? AllImages[index % AllImages?.length].URL
+                            : "/hotels/static/images/image-not-avail.png"
+                          } 
+                          className='rounded-none w-full' classNames={{
+                            wrapper: "!max-w-full"
+                        }} />
+                        <h5 className='my-2 text-[18px] font-semibold text-black'>{room?.ListOfRoom[0]?.RoomType}</h5>
+                    </div><div className='border-r-1 border-solid border-[#dddddd]'>
+                            <h4 className='bg-[#dddddd] text-[174982] text-[14px] font-semibold p-3'>Option 1</h4>
+                            <ul className='p-2 '>
+                                <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> {room?.ListOfRoom[0]?.RoomRates[0]?.MealType}</li>
+                                <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Free Cancellation till {date(room?.ListOfRoom[0]?.RoomRates[0]?.ListOfCnxPolicy[0]?.CnxDateTo)}</li>
+                            </ul>
+                        </div><div className='p-2'>
+                            <div className='flex justify-between items-center mb-2'>
+                                <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'>{room?.ListOfRoom[0]?.RoomRates[0]?.Currency} </span>{room?.ListOfRoom[0]?.RoomRates[0]?.TotalRoomPrice}<span className='block text-[12px] font-normal'>avg/night</span></h3>
+                                <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Now</Button>
+                            </div>
+                            <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
+                            {room?.ListOfRoom[0]?.RoomRates[0]
+                        ?.IsRoomrefundable ? (
+                        <div className="p-2 text-center">
+                          <h6
+                            className="text-[#008089] cursor-pointer text-[16px] font-semibold inline-flex gap-1"
+                            onClick={onOpen}
+                          >
+                            Cancellation Policy{" "}
+                            <Icon icon="ei:plus" width="25" height="25" />
+                          </h6>
+                        </div>
+                      ) : (
+                            <p className='text-danger text-[12px]'>Non-Refundable</p>
+                      )}
+                        </div></>
+                ))}
+                </div>
+
+                {/* <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
                     <div className='border-r-1 border-solid border-[#dddddd] p-2'>
                     <Image src='https://c.myholidays.com/giata/MH-00151158/l/0.jpeg' className='rounded-none w-full' classNames={{
                         wrapper:"!max-w-full"
@@ -97,33 +157,7 @@ const HotelDetailsResult=()=>{
                         <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
                         <p className='text-danger text-[12px]'>Non-Refundable</p>
                     </div>
-                </div>
-
-                <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
-                    <div className='border-r-1 border-solid border-[#dddddd] p-2'>
-                    <Image src='https://c.myholidays.com/giata/MH-00151158/l/0.jpeg' className='rounded-none w-full' classNames={{
-                        wrapper:"!max-w-full"
-                    }}/>
-                    <h5 className='my-2 text-[18px] font-semibold text-black'>Executive Room</h5>
-                    </div>
-
-                    <div className='border-r-1 border-solid border-[#dddddd]'>
-                       <h4 className='bg-[#dddddd] text-[174982] text-[14px] font-semibold p-3'>Option 1</h4>    
-                       <ul className='p-2 '>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Room Only</li>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Free Cancellation till Jun 5, 2025</li>
-                       </ul> 
-                    </div>
-
-                    <div className='p-2'>
-                        <div className='flex justify-between items-center mb-2'>
-                        <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'> INR </span> 3,915.3 <span className='block text-[12px] font-normal'>avg/night</span></h3>
-                        <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Nows</Button>
-                        </div>
-                        <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
-                        <p className='text-danger text-[12px]'>Non-Refundable</p>
-                    </div>
-                </div>
+                </div> */}
 
                 
 
@@ -234,6 +268,93 @@ const HotelDetailsResult=()=>{
             </div>
            </div>
         </div>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent className="min-w-[650px]">
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 border-b-1 border-solid border-[#d8dcde]">
+                Cancellation Policy
+              </ModalHeader>
+              <ModalBody className="px-2">
+                <div className="border-1 border-solid border-[#d8dcde]">
+                  <h5 className="text-black border-b-1 border-solid border-[#d8dcde] px-2 py-3 text-[14px]">
+                    <span className="font-semibold">Room Type:</span>TWIN
+                    DELUXE, Breakfast (BED AND BREAKFAST)
+                  </h5>
+                  <p className="text-[14px] font-semibold text-[#00575e] px-2 py-3">
+                    Free Cancellation Till 25 May 2025
+                  </p>
+                  <div className="m-2 bg-[#ffe6e6] p-2">
+                    <h5 className="text-[14px] font-semibold">
+                      Cancellation or changes made after this point will incur
+                      the following charges:
+                    </h5>
+
+                    <Table
+                      hideHeader
+                      className="my-5"
+                      classNames={{
+                        table: "border-collapse border border-divider",
+                        th: "border border-divider bg-default-100",
+                        td: "border border-divider text-[14px] text-black",
+                      }}
+                    >
+                      <TableHeader>
+                        <TableColumn>&nbsp;</TableColumn>
+                        <TableColumn> &nbsp;</TableColumn>
+                        <TableColumn>&nbsp;</TableColumn>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow key="0">
+                          <TableCell className="bg-[#dddddd]">
+                            From Date
+                          </TableCell>
+                          <TableCell className="bg-[#dddddd]">
+                            To Date
+                          </TableCell>
+                          <TableCell className="bg-[#dddddd]">
+                            {" "}
+                            Cancellation Charge
+                          </TableCell>
+                        </TableRow>
+                        <TableRow key="1">
+                          <TableCell>26 May 2025</TableCell>
+                          <TableCell>29 May 2025</TableCell>
+                          <TableCell>
+                            {" "}
+                            INR 5552 Amount fare and applicable Taxes.
+                          </TableCell>
+                        </TableRow>
+                        <TableRow key="2">
+                          <TableCell>30 May 2025</TableCell>
+                          <TableCell>31 May 2025</TableCell>
+                          <TableCell>
+                            {" "}
+                            INR 8114 Amount fare and applicable Taxes.
+                          </TableCell>
+                        </TableRow>
+
+                        <TableRow key="3">
+                          <TableCell colSpan={3}>
+                            <span className="font-semibold">Note: </span> The
+                            property makes no refunds for no shows or early
+                            checkouts.
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
         </>
     )
 }
