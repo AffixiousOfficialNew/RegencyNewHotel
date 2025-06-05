@@ -1,7 +1,8 @@
+"use client"
 import React from "react";
 import HotelListing from "../components/listing/HotelListing";
 import MapFilter from "../components/listing/MapFilter";
-import {useTranslations} from 'next-intl';
+import { useTranslations } from "next-intl";
 export default function Home() {
  const t = useTranslations();
   return (
@@ -10,14 +11,7 @@ export default function Home() {
       <div className="col-span-2">
         <HotelListing/>
         </div>
-        {
-          t("Group Hotel Booking")
-        }
         <MapFilter/>
-
-
-
-
      </div>
 
 
