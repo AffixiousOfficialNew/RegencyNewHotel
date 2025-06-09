@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -15,7 +15,11 @@ import { Icon } from "@iconify/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {setCityName,setPropertyName}  from "../redux/slices/searchSlice"
+import {setCityName,setPropertyName,setDestinationId}  from "../redux/slices/searchSlice"
+import { calcLength } from "framer-motion";
+import loadConfig from "next/dist/server/config";
+
+
 const SearchWidget = () => {
   // const locationNames = [
   //   { label: "Doha", key: "doha" },
@@ -23,22 +27,43 @@ const SearchWidget = () => {
   // ];
   const currentDate = today(getLocalTimeZone());
   const [isMobile, setIsMobile] = useState(false);
-  const [citySuggestion, setCitySiggeston] = useState([]);
-  const [selectedCity, setSelectedCity] = useState('');
-  const [cityName, setCityName] = useState("")
+  const [citySuggestion, setCitySuggestion] = useState([]);
+  const [selectedCity, setSelectedCity] = useState({});
+  const [cityName, setCity] = useState("")
   const [selectedDates, setSelectedDates] = useState({
     start: currentDate,
     end: currentDate.add({ days: 2 }),
   });
-  const dispatch = useDispatch();
+  const handleSubmit = () => {
+  if (!selectedDates.start || !selectedDates.end) {
+    alert("Please select a valid date range");
+    return;
+  }
 
+  const start = selectedDates.start.toDate();
+  const end = selectedDates.end.toDate();
+
+  const formattedStart = start.toISOString().split("T")[0];
+  const formattedEnd = end.toISOString().split("T")[0];
+
+  console.log("Submitting from", formattedStart, "to", formattedEnd);
+
+  // You can now send these in your API request
+  // e.g. sendSearchRequest({ checkIn: formattedStart, checkOut: formattedEnd });
+};
+
+
+  const dispatch = useDispatch();
+  const debounceTime = useRef(null)
 
 
   const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
   console.log("chandu", getCityName)
+  
+ 
 
   useEffect(() =>{
-    setCityName(getCityName)
+    setCity(getCityName)
   },[getCityName])
 
   useEffect(() => {
@@ -63,6 +88,9 @@ const SearchWidget = () => {
       setRooms([...rooms, { adults: 2, children: 0, childAges: [] }]);
     }
   };
+
+
+  
 
   const updateChildren = (index, delta) => {
     setRooms((prev) =>
@@ -107,6 +135,8 @@ const SearchWidget = () => {
 
     return `${totalRooms} Room${totalRooms > 1 ? "s" : ""}, ${totalGuests} Guest${totalGuests > 1 ? "s" : ""}`;
   };
+  
+  console.log(getSummary())
 
   const handleRemoveRoom = (index) => {
     const updated = [...rooms];
@@ -143,44 +173,73 @@ const SearchWidget = () => {
     console.log("data")
     const respose = await axios.get(`https://stg.myholidays.com/autosuggest/api/DestinationAutoComplete?prefix=${value}`)
     const data = respose.data;
-    setCitySiggeston(data)
+    setCitySuggestion(data)
   }
 
-  const handleInputChange = async (value) => {
-    setCityName
+ const handleInputChange = (value) => {
+    setCity(value);
 
-    // if (inputValue.length > 2) {
-    //   await handleAutoSuggestion(inputValue)
-    // }
-    //  else if (inputValue.length === 0) {
-    //   setCitySiggeston([])
-
-    // }
-  }
-
-  const handleSuggestionSelection = () => {
-    const selectedCity = citySuggestion.find(
-      item => item.DestinationName
-    )
-    console.log("object",selectedCity)
-    if(selectedCity){
-    setSelectedCity(selectedCity)
-    useDispatch(setCityName(selectedCity.CityName))
-    
+    if (debounceTime.current) {
+      clearTimeout(debounceTime.current);
     }
-    
+
+    debounceTime.current = setTimeout(() => {
+      if (value.length > 2) {
+         handleAutoSuggestion(value);
+      } else if (value.length === 0) {
+        setCitySuggestion([]);
+      }
+    }, 500);
+  };
+
+
+
+  const handleSuggestionSelection = (selectedKey) => {
+  const city = citySuggestion.find(
+    item => String(item.DestinationId) === String(selectedKey)
+  );
+
+  if (city) {
+    const displayValue = `${city.CityName || city.DestinationName}, ${city.CountryName}`;
+
+    setCity(displayValue);
+    setSelectedCity(city);
+    dispatch(setCityName(displayValue));
+    dispatch(setDestinationId(city.DestinationId));
   }
+};
+const reduxDestinationId = useSelector((state) =>state.search.destinationId)
+
+
 
   const handleSearchBtn = async () => {
-    const url = `https://www.regencyholidays.com/hotels/hotellist?destinationCode=ChIJD_b8TgD9DDkRykmX-S-DzmU&checkIn=14%20Jun%202025&checkOut=21%20Jun%202025&noOfRoom=1&destinationCity=Delhi%20junction%20railway%20station&category=Landmark&currency=INR&culture=en-GB&paxInfo=AA$|&zone=null&country=Zorawar%20Singh%20Marg,%20Mori%20Gate,%20New%20Delhi,%20Delhi,%20India&countryCode=null&affiliate=0`
+  console.log("4554555455455",reduxDestinationId)
+  // console.log("apiDestinationId",city.DestinationId)
+    const checkInDate = selectedDates.start.toDate();
+    const checkOutDate = selectedDates.end.toDate();
+    const formatDate = (date) => {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = date.toLocaleString('default', { month: 'short' });
+      const year = date.getFullYear();
+      return `${day} ${month} ${year}`;
+    };
+    const formattedCheckIn = formatDate(checkInDate);
+    const formattedCheckOut = formatDate(checkOutDate);
+    console.log('cityId', selectedCity.DestinationId)
+    console.log("Redux Destination ID:", reduxDestinationId);
+     console.log("checkInDate",formattedCheckIn)
+    console.log("checkOutDate",formattedCheckOut)
+  
+    const url = `https://www.regencyholidays.com/hotels/hotellist?nationality=IN&residence=IN&destinationCode=991&checkIn=08%20Jul%202025&checkOut=11%20Jul%202025&noOfRoom=1&paxInfo=AA$|&searchType=Hotel&hotelId=&countryCode=IN&aSearch=&maxSR=0&deviceType=Desktop&cultureID=en-GB&airportCode=&Latitude=&Longitude=&currency=INR&source=Direct&sort=pricing-asc&IsPromotedProperty=false&CustomerID=0&CustomerTypeID=0&UserID=0&cityId=7433&destinationId=991&aff=0&utm_source=direct&utm_medium=direct`
 
     const respose = await axios.get(url)
     const data = respose.data;
-
-
+   
   }
 
-  console.log("selectedCity",selectedCity)
+  console.log("reduxDestinationId",reduxDestinationId)
+
+  console.log("😀,rooms")
 
 
   return (
@@ -205,17 +264,17 @@ const SearchWidget = () => {
                
               },
             }}
-            // onSelectionChange={handleSuggestionSelection}
+            onSelectionChange={handleSuggestionSelection}
             onInputChange={handleInputChange}
 
 
 
           >
             {citySuggestion.map((item) => (
-              <AutocompleteItem key={item.DestinationCode}>
-                {item.CityName && item.CountryName
-                  ? `${item.CityName}, ${item.CountryName}`
-                  : item.CityName || item.CountryName}
+              <AutocompleteItem key={item.DestinationId}>
+                {
+                 `${item?.CityName}, ${item?.CountryName}`
+                }
 
               </AutocompleteItem>
             ))}
@@ -229,6 +288,7 @@ const SearchWidget = () => {
               setSelectedDates(newRange);
               // handleChange(newRange);
             }}
+            onClick={handleSubmit}
             minValue={today(getLocalTimeZone())}
             labelPlacement="outside"
             visibleMonths={isMobile ? 1 : 2}
