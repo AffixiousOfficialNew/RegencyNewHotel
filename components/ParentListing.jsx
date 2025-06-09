@@ -7,7 +7,7 @@ import { getListOfHotel } from "../redux/slices/citySlice";
 import HotelListing from './listing/HotelListing';
 import SearchWidget from './SearchWidget';
 import FilterListing from './FilterListing';
-import PriceCurrencytFilter from './PriceCurrencytFilter';
+import PriceCurrencytFilter from './PriceCurrencyFilter'
 
 
 const Listing = () =>{

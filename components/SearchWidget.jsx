@@ -34,7 +34,8 @@ const SearchWidget = () => {
 
 
 
-  const getCityName = useSelector((state) => state?.search?.cityName)
+  const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
+  console.log("chandu", getCityName)
 
   useEffect(() =>{
     setCityName(getCityName)
@@ -146,15 +147,15 @@ const SearchWidget = () => {
   }
 
   const handleInputChange = async (value) => {
-    const inputValue = value
+    setCityName
 
-    if (inputValue.length > 2) {
-      await handleAutoSuggestion(inputValue)
-    }
-     else if (inputValue.length === 0) {
-      setCitySiggeston([])
+    // if (inputValue.length > 2) {
+    //   await handleAutoSuggestion(inputValue)
+    // }
+    //  else if (inputValue.length === 0) {
+    //   setCitySiggeston([])
 
-    }
+    // }
   }
 
   const handleSuggestionSelection = () => {
@@ -205,7 +206,7 @@ const SearchWidget = () => {
               },
             }}
             // onSelectionChange={handleSuggestionSelection}
-            // onInputChange={handleInputChange}
+            onInputChange={handleInputChange}
 
 
 
