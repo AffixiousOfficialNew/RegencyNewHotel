@@ -7,7 +7,6 @@ const FilterListing = () => {
   const [value, setValue] = React.useState([100, 300]);
   const [isDropdown, setIsDropdown] = useState("null");
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
-  // Update isMobile on window resize
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);
@@ -226,7 +225,7 @@ const FilterListing = () => {
               />
             </div>
             {(isMobile || isDropdown === "dropdown4") && (
-              <div className="static xl:absolute  top-[50px] left-0 right-0   bg-white px-2 py-5 shadow w-full xl:w-[250px] mt-2 xl:mt-0  z-[99]">
+              <div className="static xl:absolute  top-[50px] left-0 right-0   bg-white px-2 py-5 shadow w-full mt-2 xl:mt-0  z-[99]">
                 <div className="grid grid-cols-1 xl:grid-cols-4 items-center gap-2 xl:gap-5">
                   <div className="flex gap-2 w-full">
                     <Checkbox>Near Souq Waqif</Checkbox>{" "}
