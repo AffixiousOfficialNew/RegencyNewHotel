@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -15,9 +15,7 @@ import { Icon } from "@iconify/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {setCityName,setPropertyName,setDestinationId}  from "../redux/slices/searchSlice"
-import { calcLength } from "framer-motion";
-import loadConfig from "next/dist/server/config";
+import { setCityName, setPropertyName, setDestinationId ,setCityId} from "../redux/slices/searchSlice"
 
 
 const SearchWidget = () => {
@@ -34,23 +32,26 @@ const SearchWidget = () => {
     start: currentDate,
     end: currentDate.add({ days: 2 }),
   });
+  const [rooms, setRooms] = useState([
+    { adults: 2, children: 0, childAges: [] },
+  ]);
   const handleSubmit = () => {
-  if (!selectedDates.start || !selectedDates.end) {
-    alert("Please select a valid date range");
-    return;
-  }
+    if (!selectedDates.start || !selectedDates.end) {
+      alert("Please select a valid date range");
+      return;
+    }
 
-  const start = selectedDates.start.toDate();
-  const end = selectedDates.end.toDate();
+    const start = selectedDates.start.toDate();
+    const end = selectedDates.end.toDate();
 
-  const formattedStart = start.toISOString().split("T")[0];
-  const formattedEnd = end.toISOString().split("T")[0];
+    const formattedStart = start.toISOString().split("T")[0];
+    const formattedEnd = end.toISOString().split("T")[0];
 
-  console.log("Submitting from", formattedStart, "to", formattedEnd);
+    console.log("Submitting from", formattedStart, "to", formattedEnd);
 
-  // You can now send these in your API request
-  // e.g. sendSearchRequest({ checkIn: formattedStart, checkOut: formattedEnd });
-};
+    // You can now send these in your API request
+    // e.g. sendSearchRequest({ checkIn: formattedStart, checkOut: formattedEnd });
+  };
 
 
   const dispatch = useDispatch();
@@ -59,12 +60,12 @@ const SearchWidget = () => {
 
   const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
   console.log("chandu", getCityName)
-  
- 
 
-  useEffect(() =>{
+
+
+  useEffect(() => {
     setCity(getCityName)
-  },[getCityName])
+  }, [getCityName])
 
   useEffect(() => {
     const checkMobile = () => {
@@ -90,7 +91,7 @@ const SearchWidget = () => {
   };
 
 
-  
+
 
   const updateChildren = (index, delta) => {
     setRooms((prev) =>
@@ -135,7 +136,7 @@ const SearchWidget = () => {
 
     return `${totalRooms} Room${totalRooms > 1 ? "s" : ""}, ${totalGuests} Guest${totalGuests > 1 ? "s" : ""}`;
   };
-  
+
   console.log(getSummary())
 
   const handleRemoveRoom = (index) => {
@@ -161,9 +162,7 @@ const SearchWidget = () => {
   const MAX_ADULTS = 4;
   const MAX_CHILDREN = 2;
   const [isOpen, setIsOpen] = React.useState(false);
-  const [rooms, setRooms] = useState([
-    { adults: 2, children: 0, childAges: [] },
-  ]);
+
 
   const handleDone = () => {
     setIsOpen(false);
@@ -176,7 +175,7 @@ const SearchWidget = () => {
     setCitySuggestion(data)
   }
 
- const handleInputChange = (value) => {
+  const handleInputChange = (value) => {
     setCity(value);
 
     if (debounceTime.current) {
@@ -185,7 +184,7 @@ const SearchWidget = () => {
 
     debounceTime.current = setTimeout(() => {
       if (value.length > 2) {
-         handleAutoSuggestion(value);
+        handleAutoSuggestion(value);
       } else if (value.length === 0) {
         setCitySuggestion([]);
       }
@@ -195,26 +194,31 @@ const SearchWidget = () => {
 
 
   const handleSuggestionSelection = (selectedKey) => {
-  const city = citySuggestion.find(
-    item => String(item.DestinationId) === String(selectedKey)
-  );
+    const city = citySuggestion.find(
+      item => String(item.DestinationId) === String(selectedKey)
+    );
 
-  if (city) {
-    const displayValue = `${city.CityName || city.DestinationName}, ${city.CountryName}`;
+    if (city) {
+      const displayValue = `${city.CityName || city.DestinationName}, ${city.CountryName}`;
 
-    setCity(displayValue);
-    setSelectedCity(city);
-    dispatch(setCityName(displayValue));
-    dispatch(setDestinationId(city.DestinationId));
-  }
-};
-const reduxDestinationId = useSelector((state) =>state.search.destinationId)
+      setCity(displayValue);
+      setSelectedCity(city);
+      dispatch(setCityName(displayValue));
+      dispatch(setDestinationId(city.DestinationId));
+      dispatch(setCityId(city.CityId))
+    }
+  };
+  const reduxDestinationId = useSelector((state) => state.search.destinationId)
+  const reduxCityId = useSelector((state) => state.search.cityId )
 
 
 
   const handleSearchBtn = async () => {
-  console.log("4554555455455",reduxDestinationId)
-  // console.log("apiDestinationId",city.DestinationId)
+    console.log("4554555455455", reduxDestinationId)
+    const RoomData = rooms.length
+     const paxInfo = getPaxInfoString();
+     console.log("paxinfo", paxInfo)
+    
     const checkInDate = selectedDates.start.toDate();
     const checkOutDate = selectedDates.end.toDate();
     const formatDate = (date) => {
@@ -227,29 +231,29 @@ const reduxDestinationId = useSelector((state) =>state.search.destinationId)
     const formattedCheckOut = formatDate(checkOutDate);
     console.log('cityId', selectedCity.DestinationId)
     console.log("Redux Destination ID:", reduxDestinationId);
-     console.log("checkInDate",formattedCheckIn)
-    console.log("checkOutDate",formattedCheckOut)
-  
-    const url = `https://www.regencyholidays.com/hotels/hotellist?nationality=IN&residence=IN&destinationCode=991&checkIn=08%20Jul%202025&checkOut=11%20Jul%202025&noOfRoom=1&paxInfo=AA$|&searchType=Hotel&hotelId=&countryCode=IN&aSearch=&maxSR=0&deviceType=Desktop&cultureID=en-GB&airportCode=&Latitude=&Longitude=&currency=INR&source=Direct&sort=pricing-asc&IsPromotedProperty=false&CustomerID=0&CustomerTypeID=0&UserID=0&cityId=7433&destinationId=991&aff=0&utm_source=direct&utm_medium=direct`
+    console.log("checkInDate", formattedCheckIn)
+    console.log("checkOutDate", formattedCheckOut)
+
+    const url = `http://localhost:3001/hotels/hotellist?nationality=IN&residence=IN&destinationCode=991&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&paxInfo=${paxInfo}&searchType=Hotel&hotelId=&countryCode=IN&aSearch=&maxSR=0&deviceType=Desktop&cultureID=en-GB&airportCode=&Latitude=&Longitude=&currency=INR&source=Direct&sort=pricing-asc&IsPromotedProperty=false&CustomerID=0&CustomerTypeID=0&UserID=0&cityId=${reduxCityId}&destinationId=${reduxDestinationId}&aff=0&utm_source=direct&utm_medium=direct`
 
     const respose = await axios.get(url)
     const data = respose.data;
-   
+ 
   }
 
-  console.log("reduxDestinationId",reduxDestinationId)
+  console.log("reduxDestinationId", reduxDestinationId)
 
-  console.log("😀,rooms")
+  console.log("tetete😀", rooms)
 
 
   return (
     <div className="bg-[#174982] py-5">
       <div className="container mx-auto px-2 xl:px-0">
         <div className="flex items-center justify-center gap-2">
-        
-        
-          
-        
+
+
+
+
           <Autocomplete
             inputValue={cityName}
             variant="bordered"
@@ -261,7 +265,7 @@ const reduxDestinationId = useSelector((state) =>state.search.destinationId)
             inputProps={{
               classNames: {
                 inputWrapper: "bg-white h-[50px] rounded-[5px]",
-               
+
               },
             }}
             onSelectionChange={handleSuggestionSelection}
@@ -273,7 +277,7 @@ const reduxDestinationId = useSelector((state) =>state.search.destinationId)
             {citySuggestion.map((item) => (
               <AutocompleteItem key={item.DestinationId}>
                 {
-                 `${item?.CityName}, ${item?.CountryName}`
+                  `${item?.CityName}, ${item?.CountryName}`
                 }
 
               </AutocompleteItem>

@@ -4,6 +4,7 @@ const initialState = {
     cityName : "",
     propertyName : "",
     destinationId : "",
+    cityId : "",
 
 }
 
@@ -21,6 +22,9 @@ const searchSlice = createSlice(
             setDestinationId(state, action) {
                 state.destinationId = action.payload
             },
+            setCityId(state, action) {
+                state.cityId = action.payload
+            },
            
         }
     }
@@ -29,7 +33,8 @@ const searchSlice = createSlice(
 export const {
 setCityName,
 setPropertyName,
-setDestinationId
+setDestinationId,
+setCityId
 } = searchSlice.actions
 
 export default searchSlice.reducer
