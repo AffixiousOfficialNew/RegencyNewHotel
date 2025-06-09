@@ -1,9 +1,54 @@
 import React from "react";
-const MapFilter=()=>{
-    return (
-        <div className="sticky top-0">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14011.29430096525!2d77.36525985000002!3d28.60506905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1749032279755!5m2!1sen!2sin"  className="w-full h-[100vh]"  loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-    );
-}
+import { GoogleMap, LoadScript, Marker, InfoWindow} from "@react-google-maps/api";
+import { Image, Button } from "@heroui/react";
+import Amenities from "../../components/Amenities";
+import { Icon } from "@iconify/react";
+const MapFilter = ({ latitude, longitude , selectedHotel  }) => {
+  const containerStyle = {
+    width: "100%",
+    height: "100vh",
+  };
+
+  const center = {
+    lat: latitude || 28.610001,
+    lng: longitude || 77.230003,
+  };
+
+  return (
+    <div className="sticky top-0">
+      <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={16}>
+           <Marker position={center}>
+            <InfoWindow position={center} className="bg-white p-2 rounded-lg shadow-lg ">
+              <div className="text-sm w-[350px]">
+                <Image src={selectedHotel?.HotelImage} className="w-full h-[250px]" classNames={{
+                    wrapper:"!max-w-full",
+                }}/>
+                <h2 className="font-bold my-2">{selectedHotel?.HotelName}</h2>
+
+                <div className="flex gap-0">
+                    {[...Array(5)].map((_, i) => (
+                      <Icon
+                        key={i}
+                        icon="material-symbols-light:star-rounded"
+                        width="30"
+                        height="30"
+                        className={`text-[#feba02] ${i < selectedHotel?.HotelStar ? "" : "opacity-20"}`}
+                      />
+                    ))}
+                  </div>
+
+                <p className="mb-2">{selectedHotel?.HotelAddress || 'Hotel Address'}</p>
+                <div className="flex gap-2 my-2 flex-wrap">
+                    <Amenities amenities={selectedHotel?.amenitiesType} />
+                  </div>
+              </div>
+            </InfoWindow>
+          </Marker>
+        </GoogleMap>
+      </LoadScript>
+    </div>
+  );
+};
+
 export default MapFilter;
