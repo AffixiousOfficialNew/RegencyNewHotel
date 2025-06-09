@@ -19,7 +19,7 @@ const Listing = () => {
   const [isFilter, setFilter] = useState(false);
   const [isSearchWidget, setSearchWidget] = useState(false);
   const [selectedHotel, setSelectedHotel] = useState(null);
-
+ const [isInfoOpen, setIsInfoOpen] = useState(true);  
   const lat = parseFloat(selectedHotel?.Latitude);
   const lng = parseFloat(selectedHotel?.Longitude);
 
@@ -89,10 +89,11 @@ const Listing = () => {
       {/* Grid Layout */}
       <div className="w-full grid grid-cols-3 gap-2 py-5">
         <div className="col-span-3 xl:col-span-2">
-          <HotelListing setSelectedHotel={setSelectedHotel} />
+          <HotelListing setSelectedHotel={setSelectedHotel} setIsInfoOpen={setIsInfoOpen} />
         </div>
         <div className="col-span-1 relative hidden xl:block">
-          <MapFilter selectedHotel={selectedHotel} latitude={lat} longitude={lng} />
+          <MapFilter selectedHotel={selectedHotel} isInfoOpen={isInfoOpen}
+          setIsInfoOpen={setIsInfoOpen} latitude={lat} longitude={lng} />
         </div>
       </div>
 

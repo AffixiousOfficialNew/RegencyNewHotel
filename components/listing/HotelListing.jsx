@@ -7,12 +7,11 @@ import { getInfo } from "../../redux/slices/detailSlice";
 import Amenities from "../Amenities";
 import SkeletonLoader from "../SkeletonLoader";
 
-const HotelListing = ({ setSelectedHotel }) => {
+const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   const dispatch = useDispatch();
   const { listing, details } = useSelector((state) => state);
   const hotels = listing?.listofHotel || [];
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     if (listing?.listofHotel) {
       setLoading(false);
@@ -33,7 +32,10 @@ const HotelListing = ({ setSelectedHotel }) => {
             <article
               key={index}
               className="flex gap-5 border border-solid border-[#dddddd] p-2 flex-wrap md:flex-nowrap"
-              onMouseEnter={() => setSelectedHotel(hotel)}
+               onMouseEnter={() => {
+    setSelectedHotel(hotel);
+    setIsInfoOpen(true);
+  }}
             >
               <div className="w-full md:w-[40%] xl:w-[20%] relative overflow-hidden rounded-[10px]">
                 <Image
