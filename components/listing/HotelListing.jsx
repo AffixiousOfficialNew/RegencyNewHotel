@@ -35,12 +35,12 @@ console.log({images});
             <div className="w-full px-2 mx-auto">
             {hotels &&
               hotels.map((hotel, index) => (
-                <article className="flex gap-5 border border-solid border-[#dddddd] p-2">
+                <article className="flex gap-5 border border-solid border-[#dddddd] p-2 flex-wrap md:flex-nowrap">
          
                     <div 
                     key={index}
-                    className="w-[450px] relative">
-                      <Image src={hotel.HotelImage} className="w-full h-[250px]" alt="" classNames={{
+                    className="w-full md:w-[40%] xl:w-[20%]  relative overflow-hidden rounded-[10px]">
+                      <Image src={hotel.HotelImage} className="w-full  md:absolute static xl:static top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none" alt="" classNames={{
                           wrapper: "!max-w-full"
                       }} 
                        
@@ -48,7 +48,7 @@ console.log({images});
                       <span  onClick={()=> handleImageClick(hotel.Hotelcode)} className="px-5 py-2 rounded-[5px] absolute bottom-[10px] right-[10px] z-[99] flex gap-2 bg-black text-white"> <Icon icon="ph:image-light" width="25" height="25" /></span>
                   </div>
                   
-                  <div className="w-full flex gap-2">
+                  <div className=" w-full md:w-[60%] xl:w-[80%] flex md:flex-nowrap flex-wrap gap-2">
                           <div className="w-full">
                               <h2 className="text-[24px] font-bold text-black">{hotel.HotelName}</h2>
                               <div className="flex gap-0">
@@ -67,13 +67,13 @@ console.log({images});
                               {/* <p className="flex gap-2 items-center"><Icon icon="game-icons:path-distance" width="24" height="24" /> <span className="text-black text-[12px]">1.2KM</span> </p> */}
                               <p className="bg-[#707070] px-3 py-2 inline-block text-white text-[12px] rounded-[10px] mt-3">{hotel.MealType}</p>
 
-                              <div className="flex gap-2 my-2">
+                              <div className="flex gap-2 my-2 flex-wrap">
 
                                <Amenities amenities={hotel.amenitiesType} />
                                 
                               </div>
                           </div>
-                          <div className="border-l-1 border-solid border-[#dddddd] pl-3 w-[350px] text-center flex items-center justify-center">
+                          <div className="border-l-0 md:border-l-1 border-solid border-[#dddddd] pl-3 w-full md:w-[350px] text-center flex items-center justify-center">
                               <div>
                                   <h4 className="text-[24px] font-semibold"><span>{hotel.SelectedCurrency} </span>{hotel.LowestPrice}</h4>
                                   <p>avg/night</p>
