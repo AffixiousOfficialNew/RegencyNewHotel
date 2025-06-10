@@ -96,7 +96,7 @@ export const PriceDetails = ({data}) => {
             
             <Divider />
             
-            <div className="flex items-center justify-between rounded-medium bg-warning-100 p-4 text-lg font-bold">
+            <div className="flex items-center justify-between rounded-medium  p-4 text-lg font-bold" style={{backgroundColor:"#ffab00", color:"white"}}>
               <p>GRAND TOTAL</p>
               <p>{Currency} {formatCurrency(Math.ceil(GrandTotal))}</p>
             </div>
