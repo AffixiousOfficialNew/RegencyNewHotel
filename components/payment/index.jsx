@@ -229,14 +229,7 @@ const
 
   const {handleSubmit, watch, value, setvalue, error={}}  =form
 const onSubmit = (d) => {
-  if(secondForm == 1){
-    setSecondForm(2)
-  }else{
-    makePayment()
-     console.log("d", d)
-  }
- 
-
+  makePayment()
 };
 
 const transformGuestsToPassengerDetails = (guests = []) => {
@@ -735,92 +728,92 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
       // };
  
       let decideBody ={
-    "TrackID":randomTrackId,
-    "Source": "Mobile",
-    "TotalPrice": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
-    "Currency": "QAR",
-    "CustomerIP": "14.99.232.131",
-    "VendorName": "Moneta",
-    "Email": formData?.email,
-    "DevicePrintingId": "IOS-payment_99907347",
-    "CartToken": "",
-    "ClientDetails": {
-      "AcceptLanguage": null,
-      "UserAgent": null
-  },
-    "Udf1": "12298",
-    "ActiveFraudToolVendorID":0,
-    "Udf2": "",
-        "Udf3": "Post-Auth",
-    "BillingAddress": {
-        "FirstName": formData?.firstName,
-        "LastName": formData?.lastName,
-        "Address1": formData?.street,
-        "Country": formData?.country,
-        "CountryCode": formData?.country,
-        "Phone": formData?.mobile,
-        "City": formData?.city,
-        "Province": "Fedsf",
-        "ProvinceCode": "Fedsf",
-        "ZipCode": formData?.zip,
-        "FullName": formData?.firstName + " " + formData?.lastName,
-        "Address2":formData?.street
-    },
-    "LineItems": [
-        {
-            "AccommodationLineItem": [
-                {
-                    "Price": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
-                    "Quantity": 1,
-                        "CancellationPolicy": "REFUNDABLE",
-                    "Title": "Regional/ Travel Inbound",
-                    "Productid": "632910392",
-                    "Category": "Travel Insurance",
-                    "Brand": "QIC",
-                    "ProductType": "Digital",
-                    "QuantityPurchased": 1,
-                    "AccommodationType": "HOTEL",
-                    "CancellationPolicy": "REFUNDABLE",
-                    "CheckInDate": data?.hotelDetails && data?.hotelDetails.Hotelsearchrequest && data?.hotelDetails.Hotelsearchrequest.ChkInDate ? moment(data?.hotelDetails.Hotelsearchrequest.ChkInDate).format('YYYY-MM-DD') : '',
-                    "CheckOutTime": data?.hotelDetails && data?.hotelDetails.Hotelsearchrequest && data?.hotelDetails.Hotelsearchrequest.ChkOutDate ? moment(data?.hotelDetails.Hotelsearchrequest.ChkOutDate).format('YYYY-MM-DD') : '',
-                    "City": "Lagos",
-                    "CountryCode": formData?.country,
-                    "NumberOfGuests": 3,
-                    "Rating": "4",
-                    "RoomType": "One Bedroom Suite Sea View 2 adults and2 Children (3 to 12years) or 3 adults,1 Double Bed and 1 Double Sofa Bed,NonSmoking",
-                }
-            ],
-            "Title": "Emergency Medical and Other Expenses",
-            "Price": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
-            "QuantityPurchased": 1,
-            "ProductType": "6"
-        }
-    ],
-    "PaymentDetails": {
-        "CreditCardBin": "434994",
-        "AvsResultCode": "",
-        "CvvResultCode": formData?.cvv,
-        "CreditCardNumber": formData?.cardNumber,
-        "CreditCardCompany": formData?.cardType?.toString() == "1" ? "Visa" : formData?.cardType?.toString(),
-    },
-    "Customer": {
+        "TrackID":randomTrackId,
+        "Source": "Web",
+        "TotalPrice": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
+        "Currency": globalCurrency,
+        "CustomerIP": "213.230.92.209",
+        "VendorName": "Moneta",
         "Email": formData?.email,
-        "VerifiedEmail": true,
-        "FirstName": formData?.firstName,
-        "LastName": formData?.lastName,
-        "Id": "207119551",
-        "CreatedAt": "2021-07-24T13:36:50-04:00",
-        "AccountType": "registered",
-           "PurchaserOrderCount": 0,
-          "OrdersCount": null,
-    },
-    "FraudToolApiCredentials": null,
-    "FraudToolTransactionID": 0,
-    "HasError": false,
-    "IsAlternateEmailRequired": false,
-    "Passengers": passengerBodyArray,
-    "TransactionTypeID": 0,
-}
+        "DevicePrintingId": "SANYAM_TEST",
+        "CartToken": "",
+        "ClientDetails": {
+          "AcceptLanguage": null,
+          "UserAgent": null
+      },
+        "Udf1": "12299",
+        "ActiveFraudToolVendorID":0,
+        "Udf2": "",
+            "Udf3": "Post-Auth",
+        "BillingAddress": {
+            "FirstName": formData?.firstName,
+            "LastName": formData?.lastName,
+            "Address1": formData?.street,
+            "Country": formData?.country,
+            "CountryCode": formData?.country,
+            "Phone":`${formData?.countryCode} ${formData?.mobile}`,
+            "City": formData?.city,
+            "Province": "Fedsf",
+            "ProvinceCode": "Fedsf",
+            "ZipCode": formData?.zip,
+            "FullName": formData?.firstName + " " + formData?.lastName,
+            "Address2":formData?.street
+        },
+        "LineItems": [
+            {
+                "AccommodationLineItem": [
+                    {
+                        "Price": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
+                        "Quantity": 1,
+                        "CancellationPolicy": "NON-REFUNDABLE",
+                        "Title": "Regional/ Travel Inbound",
+                        "Productid": "632910392",
+                        "Category": "Travel Insurance",
+                        "Brand": "QIC",
+                        "ProductType": "Digital",
+                        "QuantityPurchased": 1,
+                        "AccommodationType": "HOTEL",
+                        "CancellationPolicy": "NON-REFUNDABLE",
+                        "CheckInDate": data?.hotelDetails && data?.hotelDetails.Hotelsearchrequest && data?.hotelDetails.Hotelsearchrequest.ChkInDate ? moment(data?.hotelDetails.Hotelsearchrequest.ChkInDate).format('YYYY-MM-DD') : '',
+                        "CheckOutTime": data?.hotelDetails && data?.hotelDetails.Hotelsearchrequest && data?.hotelDetails.Hotelsearchrequest.ChkOutDate ? moment(data?.hotelDetails.Hotelsearchrequest.ChkOutDate).format('YYYY-MM-DD') : '',
+                        "City": "Lagos",
+                        "CountryCode": formData?.country,
+                        "NumberOfGuests": 3,
+                        "Rating": "4",
+                        "RoomType": "One Bedroom Suite Sea View 2 adults and2 Children (3 to 12years) or 3 adults,1 Double Bed and 1 Double Sofa Bed,NonSmoking",
+                    }
+                ],
+                "Title": "Emergency Medical and Other Expenses",
+                "Price": roomData?.hotelDetails?.HotelRooms?.[0]?.TotalPrice,
+                "QuantityPurchased": 1,
+                "ProductType": "6"
+            }
+        ],
+        "PaymentDetails": {
+            "CreditCardBin": "428099",
+            "AvsResultCode": "",
+            "CvvResultCode": formData?.cvv,
+            "CreditCardNumber": formData?.cardNumber,
+            "CreditCardCompany": formData?.cardType?.toString() == "1" ? "Visa" : formData?.cardType?.toString(),
+        },
+        "Customer": {
+            "Email": formData?.email,
+            "VerifiedEmail": true,
+            "FirstName": formData?.firstName,
+            "LastName": formData?.lastName,
+            "Id": null,
+            "CreatedAt": null,
+            "AccountType": null,
+               "PurchaserOrderCount": 0,
+              "OrdersCount": null,
+        },
+        "FraudToolApiCredentials": null,
+        "FraudToolTransactionID": 0,
+        "HasError": false,
+        "IsAlternateEmailRequired": false,
+        "Passengers": passengerBodyArray,
+        "TransactionTypeID": 0,
+    }
 
 // let decideBody = {
 //   "TrackID": "TEST_SANYAM_25454003",
@@ -1033,7 +1026,8 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
           decideApiRes?.apiRes?.data?.status === "APPROVED"
         ) {
           // make booking here
-          const bookRes = await makeBooking(data.bookingId) 
+          const bookRes = await makeBooking(saveBookingData?.bookingId) 
+
           // 3 => confirm
           if (
             bookRes?.apiSucceed &&
@@ -1042,8 +1036,8 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
             const [paymentfullfilRes, paymentCapRes] = await Promise.all([
               runFraudTool
                 ? paymentFullfill(
-                    decideApiRes.apiRes.data.model.trackID,
-                    decideApiRes.apiRes.data.model.id
+                    decideApiRes?.apiRes?.data?.model?.trackID,
+                    decideApiRes?.apiRes?.data?.model?.id
                   )
                 : Promise.resolve("full fill not run"),
               paymentCapture(
@@ -1058,9 +1052,9 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
  
             // redirect to confirmation page
             const confirmCipherObj = {
-              bookingId: data.bookingId,
-              culture: 'GB',
-              bookingStatus: bookRes.apiRes.data.BookingStatus,
+              bookingId: saveBookingData?.bookingId,
+              culture: formData?.country,
+              bookingStatus: bookRes?.apiRes?.data?.Model?.BookingStatus
             };
  
             // if (this.state.wegoClickId) {
@@ -1074,7 +1068,7 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
             let encData = CryptoJS.enc.Base64.stringify(
               CryptoJS.enc.Utf8.parse(cipherObj)
             );
-            setStep(3)
+            // setStep(3)
           } else {
             // book api failed
  
@@ -1101,7 +1095,7 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
             console.log("payment void res", paymentVoidRes);
             // redirect user to listing page
  
-            window.location.href = "https://hotel.myholidays.com/";
+            // window.location.href = "https://hotel.myholidays.com/";
            
           }
         } else {
@@ -1126,7 +1120,7 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
       } else {
         // apple pay logic here
         // make booking here
-        const bookRes = await makeBooking(data.bookingId)
+        const bookRes = await makeBooking(saveBookingData?.bookingId)
         // 3 => confirm
         if (bookRes?.apiSucceed && bookRes?.apiRes?.data?.bookingStatus === 3) {
           const paymentCapRes = await paymentCapture(
@@ -1137,15 +1131,15 @@ const passengerBodyArray = [...passengerBody, ...childPassengerBody];
  
           // redirect to confirmation page
           const confirmCipherObj = {
-            bookingId: data.bookingId,
+            bookingId: saveBookingData?.bookingId,
             wego_click_id : data?.wego_click_id,
             culture: 'GB',
-            bookingStatus: bookRes.apiRes.data.BookingStatus,
+            bookingStatus: bookRes?.apiRes?.data?.Model?.Decision,
           };
  
-          if (state?.wegoClickId) {
-            confirmCipherObj.wego_click_id = state?.wegoClickId;
-          }
+          // if (state?.wegoClickId) {
+          //   confirmCipherObj.wego_click_id = state?.wegoClickId;
+          // }
           console.log("confirm obj", confirmCipherObj);
           const cipherObj = CryptoJS.AES.encrypt(
             JSON.stringify(confirmCipherObj),
@@ -1368,14 +1362,14 @@ const renderAlert = () => {
               {paymentProcess?.isFailedPayment ? 
           renderAlert():""}
               
-              {secondForm  == 1 &&
+              
               <>
+                            <GuestDetails secondForm={secondForm} setSecondForm={setSecondForm}  form={form} data={data} RoomCount={RoomCount} globalCurrency={globalCurrency}  />
               <ContactDetails  form={form}  globalCurrency={globalCurrency } />
-              <GuestDetails secondForm={secondForm} setSecondForm={setSecondForm}  form={form} data={data} RoomCount={RoomCount} globalCurrency={globalCurrency}  />
               </>
-}
-              {secondForm == 2 &&
-              <PaymentForm form={form} cardTypes={cardTypes} data={data} globalCurrency={globalCurrency} />}
+
+              
+              <PaymentForm form={form} cardTypes={cardTypes} data={data} globalCurrency={globalCurrency} />
               <div className="flex flex-col gap-4 p-4 border shadow-xl">
           <div className="flex items-start gap-2">
             <label htmlFor="terms" className="text-sm">
@@ -1404,7 +1398,7 @@ const renderAlert = () => {
                 endContent={<Icon icon="lucide:chevron-right" />}
                 className="min-w-[120px] rounded-[5px] bg-[#b81a52] text-white"
               >
-                {secondForm  == 2 ? "Make Payment"  : "Continue"}
+              "Make Payment"
               </Button>
             </div>
           </div>

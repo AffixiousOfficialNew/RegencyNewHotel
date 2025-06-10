@@ -1817,7 +1817,7 @@ export const whiteListResponseENUM = {
       const data = localStorage.getItem('ipData')
       const cont = JSON.parse(data)
       let reg;
-      let country = details.hotelDetails.Country;
+      let country = data?.hotelDetails?.Country;
       if(country.includes(',')){
         country = country.split(', ')[1]
       }
@@ -1827,25 +1827,25 @@ export const whiteListResponseENUM = {
         reg = 'International'
       }
       function formatt(date) {
-        const year = date.substring(0, 4);
-        const month = date.substring(4, 6);
-        const day = date.substring(6, 8);
+        const year = date?.substring(0, 4);
+        const month = date?.substring(4, 6);
+        const day = date?.substring(6, 8);
         const formattedDate = `${year}-${month}-${day}`;
         return formattedDate;
       }
-      var checkIn = formatt(details.paymentInformationDetail.Hotelsearchrequest.ChkInDate);
-      var checkOut = formatt(details.paymentInformationDetail.Hotelsearchrequest.ChkOutDate)
+      var checkIn = formatt(data?.hotelDetails?.Hotelsearchrequest?.ChkInDate);
+      var checkOut = formatt(data?.hotelDetails?.Hotelsearchrequest?.ChkOutDate)
       // const cardType =props.cardTypes.filter(card => card.value == props.cardType);
       // const selectedText = cardType.length > 0 ? cardType[0].text : null;
      
       if(window && window.smartech){
         window.smartech("dispatch", "payment_success", {
-          refid: props.bookingId || '',
-          // hotelcode: props.paymentInformationDetail.MYHHotelCode||'',
+          refid: props?.bookingId || '',
+          // hotelcode: props.hotelDetails.MYHHotelCode||'',
           // hotelName:hotelName || '',
           category_name: 'Hotel',
           discount_amt: 0,
-          amount: parseFloat(props.grandTotal),
+          amount: parseFloat(props?.grandTotal),
           payment_mode: 'Card',
           retry: 1,
           source: isMobileDevice() ? 'Mweb' : 'web'
@@ -1853,32 +1853,32 @@ export const whiteListResponseENUM = {
   
         window.smartech("dispatch", "hotel_checkout_initiated",{
           src:cont?.city,
-          des:details.hotelDetails.HotelName,
-          city:details.hotelDetails.City,
-          country:details.hotelDetails.Country,
+          des:data?.hotelDetails?.HotelName,
+          city:data?.hotelDetails?.City,
+          country:data?.hotelDetails?.Country,
           region:reg,
           checkin_date:checkIn,
           checkout_date:checkOut,
-          rooms:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomCount,
-          adult:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomAdult,
-          child:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomChild,
+          rooms:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom[0]?.RoomCount,
+          adult:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom[0]?.RoomAdult,
+          child:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom[0]?.RoomChild,
           source: isMobileDevice() ? 'Mweb' : 'web'
         })
   
         window.smartech("dispatch", "hotel_booked", {
-          hotel_name: details.hotelDetails.HotelName,
-          city: details.hotelDetails.City,
-          country: details.hotelDetails.Country,
+          hotel_name: data?.hotelDetails?.HotelName,
+          city: data?.hotelDetails?.City,
+          country: data?.hotelDetails?.Country,
           region: reg,
-          discount_applied: details.AppliedDiscount,
+          discount_applied: data?.AppliedDiscount,
           coupon_type:'',
           checkin_date: checkIn,
           checkout_date: checkOut,
           booking_method: card,
-          rooms:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomCount,
-          adult:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomAdult,
-          child:details.paymentInformationDetail.HotelRooms[0].ListOfRoom[0].RoomChild,
-          amount: parseFloat(props.grandTotal),
+          rooms:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom?.[0]?.RoomCount,
+          adult:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom?.[0]?.RoomAdult,
+          child:data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom?.[0]?.RoomChild,
+          amount: parseFloat(props?.grandTotal),
           source: isMobileDevice() ? 'Mweb' : 'web'
           })
       }
@@ -1887,6 +1887,9 @@ export const whiteListResponseENUM = {
       console.log("netcore payment success error", error);      
     }
   }
+
+
+  
 
  const  getFraudToolOrderCancelHandler = (trackid, id) => {
     let request = {
