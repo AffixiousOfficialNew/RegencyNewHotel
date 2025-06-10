@@ -31,9 +31,9 @@ const PriceCurrencyFilter =()=>{
 
     return(
         <>
-       <section className="bg-[#f5f5f5] pb-5">
-        <div className="container mx-auto px-2 xl:px-0">
-        <div className="grid grid-cols-3 gap-2 p-2 bg-[#334e6c]">
+       <section className="bg-[#f5f5f5] pb-0 xl:pb-5">
+        <div className="container mx-auto px-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-[#174982] xl:bg-[#334e6c]">
         <Select className="w-full" defaultSelectedKeys={["recommended"]} label="Price" classNames={{
             base:"h-[55px]",
             trigger:"rounded-[5px] h-[55px]"

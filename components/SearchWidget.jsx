@@ -126,7 +126,7 @@ const SearchWidget = () => {
   return (
     <div className="bg-[#174982] py-5">
       <div className="container mx-auto px-2 xl:px-0">
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-2">
           <Autocomplete
             variant="bordered"
             isRequired
