@@ -15,19 +15,18 @@ import { Icon } from "@iconify/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setCityName, setPropertyName, setDestinationId ,setCityId} from "../redux/slices/searchSlice"
+import { setCityName, setPropertyName, setDestinationId, setCityId, setCountryCodes } from "../redux/slices/searchSlice"
+
 
 
 const SearchWidget = () => {
-  // const locationNames = [
-  //   { label: "Doha", key: "doha" },
-  //   { label: "Dohan", key: "dohan" },
-  // ];
+
   const currentDate = today(getLocalTimeZone());
   const [isMobile, setIsMobile] = useState(false);
   const [citySuggestion, setCitySuggestion] = useState([]);
   const [selectedCity, setSelectedCity] = useState({});
   const [cityName, setCity] = useState("")
+  const [countryCode, setCountryCode] = useState("")
   const [selectedDates, setSelectedDates] = useState({
     start: currentDate,
     end: currentDate.add({ days: 2 }),
@@ -46,26 +45,12 @@ const SearchWidget = () => {
 
     const formattedStart = start.toISOString().split("T")[0];
     const formattedEnd = end.toISOString().split("T")[0];
-
-    console.log("Submitting from", formattedStart, "to", formattedEnd);
-
-    // You can now send these in your API request
-    // e.g. sendSearchRequest({ checkIn: formattedStart, checkOut: formattedEnd });
   };
 
 
   const dispatch = useDispatch();
   const debounceTime = useRef(null)
 
-
-  const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
-  console.log("chandu", getCityName)
-
-
-
-  useEffect(() => {
-    setCity(getCityName)
-  }, [getCityName])
 
   useEffect(() => {
     const checkMobile = () => {
@@ -137,7 +122,7 @@ const SearchWidget = () => {
     return `${totalRooms} Room${totalRooms > 1 ? "s" : ""}, ${totalGuests} Guest${totalGuests > 1 ? "s" : ""}`;
   };
 
-  console.log(getSummary())
+
 
   const handleRemoveRoom = (index) => {
     const updated = [...rooms];
@@ -168,8 +153,15 @@ const SearchWidget = () => {
     setIsOpen(false);
   };
 
+
+  const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
+
+  useEffect(() => {
+    setCity(getCityName)
+  }, [getCityName])
+
+
   const handleAutoSuggestion = async (value) => {
-    console.log("data")
     const respose = await axios.get(`https://stg.myholidays.com/autosuggest/api/DestinationAutoComplete?prefix=${value}`)
     const data = respose.data;
     setCitySuggestion(data)
@@ -203,47 +195,66 @@ const SearchWidget = () => {
 
       setCity(displayValue);
       setSelectedCity(city);
+      setCountryCode(city.CountryCode)
       dispatch(setCityName(displayValue));
       dispatch(setDestinationId(city.DestinationId));
       dispatch(setCityId(city.CityId))
+      dispatch(setCountryCodes(city.CountryCode))
     }
   };
-  const reduxDestinationId = useSelector((state) => state.search.destinationId)
-  const reduxCityId = useSelector((state) => state.search.cityId )
 
+  const finalCityName = cityName ? cityName : getCityName
+
+
+  const reduxDestinationId = useSelector((state) => state?.search?.destinationId)
+  const reduxApiDestinationId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.DestinationID)
+
+
+  const reduxCityId = useSelector((state) => state?.search?.cityId)
+  const reduxApiCityId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CityId)
+  
+
+  const reduxCountryCode = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CountryCode)
+
+
+
+  const finalDestinationId = reduxDestinationId ? reduxDestinationId : reduxApiDestinationId
+  const finalCityId = reduxCityId ? reduxCityId : reduxApiCityId
+  const finalCountryCode = countryCode ? countryCode : reduxCountryCode
+
+  dispatch(setCityName(finalCityName))
+  dispatch(setDestinationId(finalDestinationId))
+  dispatch(setCityId(finalCityId))
+  dispatch(setCountryCodes(finalCountryCode))
 
 
   const handleSearchBtn = async () => {
-    console.log("4554555455455", reduxDestinationId)
+
     const RoomData = rooms.length
-     const paxInfo = getPaxInfoString();
-     console.log("paxinfo", paxInfo)
-    
+    const paxInfo = getPaxInfoString();
+
+
     const checkInDate = selectedDates.start.toDate();
     const checkOutDate = selectedDates.end.toDate();
+
     const formatDate = (date) => {
       const day = String(date.getDate()).padStart(2, '0');
       const month = date.toLocaleString('default', { month: 'short' });
       const year = date.getFullYear();
       return `${day} ${month} ${year}`;
     };
+
     const formattedCheckIn = formatDate(checkInDate);
     const formattedCheckOut = formatDate(checkOutDate);
-    console.log('cityId', selectedCity.DestinationId)
-    console.log("Redux Destination ID:", reduxDestinationId);
-    console.log("checkInDate", formattedCheckIn)
-    console.log("checkOutDate", formattedCheckOut)
 
-    const url = `http://localhost:3001/hotels/hotellist?nationality=IN&residence=IN&destinationCode=991&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&paxInfo=${paxInfo}&searchType=Hotel&hotelId=&countryCode=IN&aSearch=&maxSR=0&deviceType=Desktop&cultureID=en-GB&airportCode=&Latitude=&Longitude=&currency=INR&source=Direct&sort=pricing-asc&IsPromotedProperty=false&CustomerID=0&CustomerTypeID=0&UserID=0&cityId=${reduxCityId}&destinationId=${reduxDestinationId}&aff=0&utm_source=direct&utm_medium=direct`
+
+    const url = `http://localhost:3000/hotels/hotellist?nationality=IN&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&category=hotels&currency=INR&culture=en-GB&paxInfo=${paxInfo}&country=&countryCode=${finalCountryCode}&cityId=${finalCityId}&destinationId=${finalDestinationId}&aff=0`
 
     const respose = await axios.get(url)
     const data = respose.data;
- 
+
   }
 
-  console.log("reduxDestinationId", reduxDestinationId)
-
-  console.log("tetete😀", rooms)
 
 
   return (
