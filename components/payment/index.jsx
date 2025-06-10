@@ -534,8 +534,7 @@ const paymentAuthRequestHandler = async () => {
 }
 };
  
-const globalCurrency = useSelector((state) => state.listing.currency)
-
+const globalCurrency = useSelector((state) => state.listing.currency) || localStorage.getItem("globalCurrency") || "INR"
  
   const startPaymentFlow = async () => {
    const formData = watch();
