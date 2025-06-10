@@ -7,7 +7,7 @@ import { Icon } from "@iconify/react";
 function Footer() {
    const {isOpen, onOpen, onOpenChange} = useDisclosure();
   
-
+//
 
   return (
     <>
