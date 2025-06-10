@@ -82,7 +82,7 @@ const FilterListing = () => {
             <p className="text-[12px] font-normal text-black">Select Raiting</p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />
@@ -131,7 +131,7 @@ const FilterListing = () => {
             <p className="text-[12px] font-normal text-black">Select Meal</p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />
@@ -167,7 +167,7 @@ const FilterListing = () => {
             </p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />
@@ -219,7 +219,7 @@ const FilterListing = () => {
               </p>
               <Icon
                 icon="prime:angle-down"
-                className="absolute top-0 right-0"
+                className="absolute top-0 right-0 hidden xl:block"
                 width="24"
                 height="24"
               />
@@ -308,7 +308,7 @@ const FilterListing = () => {
             </p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />
@@ -346,7 +346,7 @@ const FilterListing = () => {
             <p className="text-[12px] font-normal text-black">Select Payment</p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />
@@ -380,7 +380,7 @@ const FilterListing = () => {
             <p className="text-[12px] font-normal text-black">All</p>
             <Icon
               icon="prime:angle-down"
-              className="absolute top-0 right-0"
+              className="absolute top-0 right-0 hidden xl:block"
               width="24"
               height="24"
             />

@@ -76,33 +76,43 @@ AC: <Icon icon="iconoir:air-conditioner" width="24" height="24" />,
 }
 
 const Amenities = ({ amenities }) => {
- if (!amenities || amenities.trim() === '') {
-    return null; // Don't render anything if amenities is empty
+  if (!amenities) return null;
+
+  // Normalize amenities to an array of strings
+  let list = [];
+
+  if (typeof amenities === 'string') {
+    list = amenities
+      .replace(/"/g, '') // Remove quotes
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean);
+  } else if (Array.isArray(amenities)) {
+    list = amenities.map(item => (typeof item === 'string' ? item.trim() : '')).filter(Boolean);
+  } else {
+    return null; // Invalid format
   }
-const items = amenities
-  .replace(/"/g, '') // Remove quotes
-  .split(',') // Split by commas
-  .map(item => item.trim()) // Trim spaces
-  .filter(item => item) // Remove empty strings
-  .map(original => {
+
+  const items = list.map(original => {
     const cleaned = original
-      .replace(/\(.*?\)/g, '')      // Remove content in parentheses
-      .replace(/^\d+/, '')          // Remove leading digits
-      .replace(/[\s\/-]+/g, '');    // Remove spaces, slashes, and hyphens
+      .replace(/\(.*?\)/g, '')   // Remove content in parentheses
+      .replace(/^\d+/, '')       // Remove leading digits
+      .replace(/[\s\/-]+/g, ''); // Remove spaces, slashes, and hyphens
 
     return { original, key: cleaned };
   });
+
   return (
-<Fragment>
-    {items.map(({ original, key }, index) => (
-      <Tooltip key={index} showArrow={true} closeDelay={0} content={original} color="foreground">
-        <span className="inline-flex border rounded-sm p-3 items-center justify-center bg-white">
-          {amenityIcons[key] || original}
-        </span>
-      </Tooltip>
-    ))}
-  </Fragment>
-  )
-}
+    <Fragment>
+      {items.map(({ original, key }, index) => (
+        <Tooltip key={index} showArrow={true} closeDelay={0} content={original} color="foreground">
+          <span className="inline-flex border rounded-sm p-3 items-center justify-center bg-white">
+            {amenityIcons[key] || original}
+          </span>
+        </Tooltip>
+      ))}
+    </Fragment>
+  );
+};
  
 export default Amenities
