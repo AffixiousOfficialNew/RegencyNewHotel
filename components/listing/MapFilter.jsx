@@ -27,7 +27,7 @@ const MapFilter = ({ latitude, longitude , selectedHotel , isInfoOpen, setIsInfo
       >
         <div className="text-sm w-[350px]">
           <Image
-            src={selectedHotel?.HotelImage}
+            src={selectedHotel?.HotelImage || 'https://www.regencyholidays.com/_next/static/media/image-not-avail.be26c5abf8dce11845e2feaa87e2ce83.png'}
             alt="Hotel"
             className="w-full h-[250px]"
             classNames={{ wrapper: "!max-w-full" }}

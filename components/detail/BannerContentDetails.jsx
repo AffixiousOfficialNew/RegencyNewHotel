@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon } from "@iconify/react";
 import {Image , Button} from "@heroui/react";
 import { useSelector } from 'react-redux';
+import Amenities from '../Amenities';
 const BannerContentDetails = () => {
   const {details} = useSelector((state)=>state);
  
@@ -22,12 +23,13 @@ const BannerContentDetails = () => {
             ))}
                 </div>
           <p className='text-[14px] text-black mt-2'>{info?.HotelAddress}</p>
-          <h5><strong>{info?.AmenityType}</strong></h5>
-
+          <div className='flex gap-2 my-5 flex-wrap'>
+          <Amenities amenities={info?.AmenityType} />
+          </div>
           <div className='w-full mt-2'>
             <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d14011.555266475312!2d77.3668853!3d28.6031121!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1749118719524!5m2!1sen!2sin" className='w-full h-[150px] border-2 border-solid border-[#dddddd]'  loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
           </div>
-          <div className='flex justify-between my-5'>
+          <div className='flex justify-between my-0 md:my-5 md:static fixed bottom-0 left-0 right-0 bg-white z-[99] px-5 py-3 border-t border-solid border-[#dddddd] '>
             <h5 className='text-[24px] text-black font-semibold'><span>{res?.Currency}</span> {res?.TotalRoomPrice}</h5>
             <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Select Room</Button>
           </div>

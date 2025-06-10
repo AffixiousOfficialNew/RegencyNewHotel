@@ -36,10 +36,10 @@ const HotelDetailsResult=()=>{
 
          <div className='container mx-auto px-2 xl:px-0'>
            <div className='border-1 border-solid border-[#dddddd] mb-5'>
-                <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
+               
                 {roomRes?.map((room, index) => (
-                    <><div 
-                    // key={index}
+                     <div className='grid grid-cols-1 md:grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
+                      <div // key={index}
                         className='border-r-1 border-solid border-[#dddddd] p-2'>
                         <Image src={
                             AllImages?.length &&
@@ -47,7 +47,7 @@ const HotelDetailsResult=()=>{
                             ? AllImages[index % AllImages?.length].URL
                             : "/hotels/static/images/image-not-avail.png"
                           } 
-                          className='rounded-none w-full' classNames={{
+                          className='rounded-none w-full opacity-1 h-[350px] object-cover' classNames={{
                             wrapper: "!max-w-full"
                         }} />
                         <h5 className='my-2 text-[18px] font-semibold text-black'>{room?.ListOfRoom[0]?.RoomType}</h5>
@@ -67,7 +67,7 @@ const HotelDetailsResult=()=>{
                         ?.IsRoomrefundable ? (
                         <div className="p-2 text-center">
                           <h6
-                            className="text-[#008089] cursor-pointer text-[16px] font-semibold inline-flex gap-1"
+                            className="text-[#d90e16] cursor-pointer text-[14px] font-semibold justify-start inline-flex gap-1"
                             onClick={onOpen}
                           >
                             Cancellation Policy{" "}
@@ -77,9 +77,10 @@ const HotelDetailsResult=()=>{
                       ) : (
                             <p className='text-danger text-[12px]'>Non-Refundable</p>
                       )}
-                        </div></>
+                        </div>
+                         </div>
                 ))}
-                </div>
+               
 
                 {/* <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
                     <div className='border-r-1 border-solid border-[#dddddd] p-2'>

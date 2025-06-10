@@ -1,90 +1,76 @@
 import React, { useState } from 'react';
-import {Image} from "@heroui/react";
+import {Image , Drawer, DrawerContent, DrawerHeader, DrawerBody, DrawerFooter, Button , useDisclosure } from "@heroui/react";
 import { useSelector } from 'react-redux';
-
+import { Icon } from "@iconify/react";
 const BannerDetails = () => {
     const {details} = useSelector((state)=>state);
     const Images = details?.detailResult[0]?.RoomImages?.Images || [];
-    // console.log({details,Images});
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const openModal = () => {
-      setIsModalOpen(true);
-    };
-  
-    const closeModal = () => {
-      setIsModalOpen(false);
-    };
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
    
         
       
         return (
-          <div className='w-full relative flex gap-2'>
+          <div className='w-full relative flex  gap-0 md:gap-2 '>
             <Image
-              src={Images[0]?.URL}
+              src={Images[1]?.URL}
               alt="banner"
-              className='h-[550px] object-cover rounded-[5px]'
+              className='md:h-[550px] w-full object-cover rounded-[5px] z-[8]'
+              classNames={{wrapper: '!max-w-full'}}
             />
       
             <div className='grid grid-cols-1 gap-2'>
-            {(Images.slice(1, 5)).map((image, index) => (
+            {(Images.slice(2, 6)).map((image, index) => (
                 <div key={index}>
                   <Image
                     src={image?.URL}
                     alt={`image-${index}`}
-                    className='rounded-[5px] w-full h-[120px] object-cover'
+                    className='rounded-[5px] w-[200px] h-[132px] object-cover z-[8] hidden md:block '
                   />
                 </div>
               ))}
       
-              {Images.length > 5 && (
-                <div
-                  className='cursor-pointer text-center text-blue-500 mt-2'
-                  onClick={openModal}
-                >
-                  {Images.length}+
-                </div>
-              )}
+             
             </div>
 
-            {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-4 w-full max-w-4xl">
-            <button
-              className="absolute top-2 right-2 text-white text-2xl"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
-            <div className="grid grid-cols-3 gap-2">
+             {Images.length > 5 && (
+                <div
+                  className='bg-black  text-white  cursor-pointer text-center absolute bottom-[10px] z-[9] right-[10px] rounded-[10px] p-2 flex gap-1 items-center'
+                  onClick={onOpen}
+                >
+                 <Icon icon="mdi-light:image" width="24" height="24" />  {Images.length}+
+                </div>
+              )}
+
+           
+
+
+<Drawer className=''   isOpen={isOpen} onOpenChange={onOpenChange}>
+        <DrawerContent className='w-full max-w-full'>
+         
+            <>
+             
+              <DrawerBody>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
               {Images.map((image, index) => (
                 <div key={index}>
                   <Image
                     src={image?.URL}
                     alt={`full-image-${index}`}
-                    className="rounded-[5px] w-full h-[200px] object-cover"
+                    className="rounded-[5px] min-w-[100%] md:min-w-[365px] h-[150px] md:h-[250px] object-cover"
                   />
                 </div>
               ))}
             </div>
+              </DrawerBody>
+             
+            </>
+         
+        </DrawerContent>
+      </Drawer>
+
+
           </div>
-        </div>
-      )}
-          </div>
-    // return(
-    //     <>
-    //     <div className='w-full relative flex gap-2'>
-    //         <Image src="https://c.myholidays.com/giata/MH-00151158/l/0.jpeg" alt="banner"  className='h-[550px] object-cover rounded-[5px]' />
-    //         <div className='grid grid-cols-1 gap-2'>
-    //              <Image src="https://c.myholidays.com/giata/MH-00151158/l/1.jpeg" alt="banner"  className='rounded-[5px] w-full h-[120px] object-cover' />
-    //               <Image src="https://c.myholidays.com/giata/MH-00151158/l/2.jpeg" alt="banner"  className='rounded-[5px] w-full h-[120px] object-cover' />
-    //                <Image src="https://c.myholidays.com/giata/MH-00151158/l/3.jpeg" alt="banner"  className='rounded-[5px] w-full h-[120px] object-cover' />
-    //                 <Image src="https://c.myholidays.com/giata/MH-00151158/l/0.jpeg" alt="banner"  className='rounded-[5px] w-full h-[120px] object-cover' />
-    //              {Images.length}+
-    //         </div>
-    //     </div>
-    //     </>
+
     )
 }
 export default BannerDetails;
