@@ -12,8 +12,8 @@ const initialState = {
   listingResult: [],
 //   filterResult: [],
   listofHotel :[],
-//   currency:isBrowser ? localStorage.getItem('globalCurrency'):"INR",
-//   currIcon:isBrowser? localStorage.getItem('globalFlag'):'twemoji:flag-india',
+  currency:isBrowser ? localStorage.getItem('globalCurrency'):"INR",
+  currIcon:isBrowser? localStorage.getItem('globalFlag'):'twemoji:flag-india',
 //   resultCount:0,
 //   pageNumber:1
 };
@@ -64,13 +64,13 @@ export const counterSlice = createSlice({
       console.log("now action is start", action?.payload?.ListOfHotels)
       state.listofHotel = action.payload
     },
-    // setCurrencyInStore(state,action){
-    //   console.log("currency dispacth", action.payload)
-    //   state.currency = action.payload
-    // },
-    // setIconCurr(state,action){
-    //   state.currIcon= action.payload
-    // },
+    setCurrencyInStore(state,action){
+      console.log("currency dispacth", action.payload)
+      state.currency = action.payload
+    },
+    setIconCurr(state,action){
+      state.currIcon= action.payload
+    },
     // setResultCount(state,action){
     //   state.resultCount = action.payload
     // },
