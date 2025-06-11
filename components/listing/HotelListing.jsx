@@ -21,7 +21,6 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   const data = listing?.listingResult[0];
   const info = data?.SearchRequest;
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState([]);
   const img = details?.detailResult[0]?.RoomImages?.Images || [];
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -30,9 +29,8 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
     if (listing?.listofHotel) {
       setLoading(false);
     }
-    if(img.length>0){
+    if(img.length > 0){
     setModalImages(img);
-    setIsModalOpen(true); 
     }
   }, [listing,img]);
 
