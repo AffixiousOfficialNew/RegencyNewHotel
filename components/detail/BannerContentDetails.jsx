@@ -6,8 +6,8 @@ import Amenities from '../Amenities';
 const BannerContentDetails = () => {
   const {details} = useSelector((state)=>state);
  
-  const res = details?.roomResult[0]?.ListOfRooms[0]?.ListOfRoom[0]?.RoomRates[0]
-  const info = details?.detailResult[0]?.Info;
+  const res = details?.roomResult[0]?.ListOfRooms[0]?.ListOfRoom[0]?.RoomRates[0] || [];
+  const info = details?.detailResult[0]?.Info || [];
     return(
         <div className=''>
           <h1 className='text-[24px] font-semibold text-black'>{info?.HotelName}</h1>  
