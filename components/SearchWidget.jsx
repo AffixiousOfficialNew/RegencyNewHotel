@@ -541,6 +541,7 @@ useEffect(() => {
               </PopoverTrigger>
               <PopoverContent>
                 <div className="px-1 py-2 w-full">
+                  <div className="max-h-[250px] overflow-auto">
                   {rooms.map((room, index) => (
                     <div
                       key={index}
@@ -646,7 +647,7 @@ useEffect(() => {
                       )}
                     </div>
                   ))}
-
+                  </div>
                   <div className="flex justify-between gap-2 mt-3">
                     <Button
                       onPress={handleAddRoom}

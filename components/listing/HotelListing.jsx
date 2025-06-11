@@ -59,12 +59,12 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
                 <Image
                   src={hotel.HotelImage}
                   alt={hotel.HotelName}
-                  className="w-full  top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none"
+                  className="w-full  top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none z-[8]"
                   classNames={{ wrapper: "!max-w-full" }}
                 />
                 <span
                   onClick={() => handleImageClick(hotel.Hotelcode)}
-                  className="px-5 py-2 rounded-[5px] absolute bottom-[10px] right-[10px] z-[99] flex gap-2 bg-black text-white cursor-pointer"
+                  className="px-5 py-2 rounded-[5px] absolute bottom-[10px] right-[10px] z-[9] flex gap-2 bg-black text-white cursor-pointer"
                 >
                   <Icon icon="ph:image-light" width="25" height="25" />
                 </span>
