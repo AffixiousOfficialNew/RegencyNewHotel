@@ -15,7 +15,7 @@ import { Icon } from "@iconify/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setCityName, setPropertyName, setDestinationId, setCityId, setCountryCodes } from "../redux/slices/searchSlice"
+import { useRouter } from "next/navigation";
 
 
 
@@ -26,7 +26,19 @@ const SearchWidget = () => {
   const [citySuggestion, setCitySuggestion] = useState([]);
   const [selectedCity, setSelectedCity] = useState({});
   const [cityName, setCity] = useState("")
+  const [cityId, setCityId] = useState('')
+  const [destinationId, setDestinationId] = useState('')
   const [countryCode, setCountryCode] = useState("")
+  const [destinationCode, setDestinationCode] = useState("")
+  const [property, setProperty] = useState({})
+  const [propertyId, setPropertyId] = useState('')
+  const [propertySuggestion, setPropertySuggestion] = useState([])
+  const [propertyName, setPropertyName] = useState("")
+  const [selectedProperty, setSelectedProperty] = useState()
+  const [selectedCityKey, setSelectedCityKey] = useState(null);
+  const [selectedPropertyKey, setSelectedPropertyKey] = useState(null);
+
+
   const [selectedDates, setSelectedDates] = useState({
     start: currentDate,
     end: currentDate.add({ days: 2 }),
@@ -47,7 +59,7 @@ const SearchWidget = () => {
     const formattedEnd = end.toISOString().split("T")[0];
   };
 
-
+  const router = useRouter()
   const dispatch = useDispatch();
   const debounceTime = useRef(null)
 
@@ -106,7 +118,7 @@ const SearchWidget = () => {
           const children = "C".repeat(room.children);
           const childAges =
             room.childAges.length > 0 ? `$${room.childAges.join(",")}` : "$";
-          return `${adults}-${children}${childAges}`;
+          return `${adults}${children}${childAges}`;
         })
         .join("|") + "|"
     );
@@ -155,9 +167,15 @@ const SearchWidget = () => {
 
 
   const getCityName = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.City)
+  const getCityId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CityId)
+  const getDestinationId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.DestinationID)
+  const getDestinationCode = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CurrencyCode)
 
   useEffect(() => {
     setCity(getCityName)
+    setDestinationId(getDestinationId)
+    setCityId(getCityId)
+    setDestinationCode(getDestinationCode)
   }, [getCityName])
 
 
@@ -167,7 +185,8 @@ const SearchWidget = () => {
     setCitySuggestion(data)
   }
 
-  const handleInputChange = (value) => {
+
+  const handleCityInputChange = (value) => {
     setCity(value);
 
     if (debounceTime.current) {
@@ -175,7 +194,7 @@ const SearchWidget = () => {
     }
 
     debounceTime.current = setTimeout(() => {
-      if (value.length > 2) {
+      if (value) {
         handleAutoSuggestion(value);
       } else if (value.length === 0) {
         setCitySuggestion([]);
@@ -185,7 +204,7 @@ const SearchWidget = () => {
 
 
 
-  const handleSuggestionSelection = (selectedKey) => {
+  const handleCitySuggestionSelection = (selectedKey) => {
     const city = citySuggestion.find(
       item => String(item.DestinationId) === String(selectedKey)
     );
@@ -196,36 +215,138 @@ const SearchWidget = () => {
       setCity(displayValue);
       setSelectedCity(city);
       setCountryCode(city.CountryCode)
-      dispatch(setCityName(displayValue));
-      dispatch(setDestinationId(city.DestinationId));
-      dispatch(setCityId(city.CityId))
-      dispatch(setCountryCodes(city.CountryCode))
+      setCityId(city.CityId)
+      setDestinationId(city.DestinationId)
+
+
+      // dispatch(setCityName(displayValue));
+      // dispatch(setDestinationId(city.DestinationId));
+      // dispatch(setCityId(city.CityId))
+      // dispatch(setCountryCodes(city.CountryCode))
     }
   };
 
-  const finalCityName = cityName ? cityName : getCityName
+  // const finalCityName = cityName ? cityName : getCityName
 
 
-  const reduxDestinationId = useSelector((state) => state?.search?.destinationId)
+  // const reduxDestinationId = useSelector((state) => state?.search?.destinationId)
   const reduxApiDestinationId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.DestinationID)
 
 
-  const reduxCityId = useSelector((state) => state?.search?.cityId)
+  // const reduxCityId = useSelector((state) => state?.search?.cityId)
   const reduxApiCityId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CityId)
-  
+
 
   const reduxCountryCode = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CountryCode)
 
 
 
-  const finalDestinationId = reduxDestinationId ? reduxDestinationId : reduxApiDestinationId
-  const finalCityId = reduxCityId ? reduxCityId : reduxApiCityId
-  const finalCountryCode = countryCode ? countryCode : reduxCountryCode
+  // const finalDestinationId = reduxDestinationId ? reduxDestinationId : reduxApiDestinationId
+  // const finalCityId = reduxCityId ? reduxCityId : reduxApiCityId
+  // const finalCountryCode = countryCode ? countryCode : reduxCountryCode
 
-  dispatch(setCityName(finalCityName))
-  dispatch(setDestinationId(finalDestinationId))
-  dispatch(setCityId(finalCityId))
-  dispatch(setCountryCodes(finalCountryCode))
+  // dispatch(setCityName(finalCityName))
+  // dispatch(setDestinationId(finalDestinationId))
+  // dispatch(setCityId(finalCityId))
+  // dispatch(setCountryCodes(finalCountryCode))
+
+
+
+  const handlePropertySuggesiton = async (value) => {
+    try {
+      const respose = await axios.get(`https://www.myholidays.com/autosuggest/api/HotelAutoComplete?DestinationId=${destinationId}&CityId=${cityId}&prefix=${value}`)
+
+      const data = respose?.data
+      setPropertySuggestion(data)
+    } catch (error) {
+      console.log("error", error)
+    }
+  }
+
+
+  const handlePropertyInputChange = (value) => {
+
+
+    setPropertyName(value);
+    if (debounceTime.current) {
+      clearTimeout(debounceTime.current)
+    }
+    debounceTime.current = setTimeout(() => {
+      if (value) {
+        handlePropertySuggesiton(value)
+      } else if (value == 0) {
+        setPropertySuggestion([])
+      }
+
+    }, 500)
+  }
+
+  const handlePropertySelection = (selectedKey) => {
+    const property = propertySuggestion.find(
+      item => String(item.MHHotelID) === String(selectedKey)
+    );
+
+    if (property) {
+
+      const displayPropertyData = property.HotelName
+      setPropertyName(displayPropertyData)
+      setPropertyId(property.MHHotelID)
+      setSelectedProperty(property.MHHotelID)
+      // dispatch(setPropertyNames(displayPropertyData))
+      // dispatch(setHotelId(property.MHHotelID))
+
+    }
+
+  }
+
+
+
+  window.onload = function () {
+    if ('caches' in window) {
+      caches.keys().then(function (names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+  };
+
+
+  useEffect(() => {
+    const isOnListingPage = window.location.pathname.includes("/listing") || window.location.pathname.includes("hotels/hotellist");
+
+    if (isOnListingPage && !propertyId) {
+      setPropertyName("");
+      setSelectedProperty(null);
+    }
+  }, []);
+
+const apiReduxPropertyName = useSelector(
+  (state) => state?.details?.detailResult?.[0]?.Info?.HotelName
+);
+
+const apiReduxCityName =  useSelector(
+  (state) => state?.details?.detailResult?.[0]?.Info?.City
+);
+const apiReduxCityId =  useSelector(
+  (state) => state?.details?.detailResult?.[0]?.Info?.CityId
+);
+const apiReduxDestinaionId =  useSelector(
+  (state) => state?.details?.detailResult?.[0]?.Info?.DestinationId
+);
+
+useEffect(() => {
+  const isOnDetailPage =
+    window.location.pathname.includes("/hoteldetail") ||
+    window.location.pathname.includes("/hotels/hoteldetail");
+
+  if (isOnDetailPage && apiReduxPropertyName && apiReduxCityName) {
+    setPropertyName(apiReduxPropertyName);
+    setCity(apiReduxCityName)
+    setCityId(apiReduxCityId)
+    setDestinationId(apiReduxDestinaionId)
+  }
+}, [apiReduxPropertyName]);
 
 
   const handleSearchBtn = async () => {
@@ -246,14 +367,24 @@ const SearchWidget = () => {
 
     const formattedCheckIn = formatDate(checkInDate);
     const formattedCheckOut = formatDate(checkOutDate);
+    
+  
+
+    if (cityName && propertyName) {
+
+     window.location.href=`/hotels/hoteldetail?hotelId=${propertyId}&nationality=IN&destinationCode=${destinationId}&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&paxInfo=${paxInfo}&aff=0&currency=INR&IsPromotedProperty=false&currency=INR&searchType=undefined&countryCode=${destinationCode}&utm_source=direct&utm_medium=direct`
 
 
-    const url = `http://localhost:3000/hotels/hotellist?nationality=IN&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&category=hotels&currency=INR&culture=en-GB&paxInfo=${paxInfo}&country=&countryCode=${finalCountryCode}&cityId=${finalCityId}&destinationId=${finalDestinationId}&aff=0`
+    } else if (cityName && !propertyName) {
+  
 
-    const respose = await axios.get(url)
-    const data = respose.data;
+      window.location.href=`/hotels/hotellist?nationality=IN&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&category=hotels&currency=INR&culture=en-GB&paxInfo=${paxInfo}&country=&countryCode=${destinationCode}&cityId=${cityId}&destinationId=${destinationId}&aff=0`
 
+    }
   }
+
+
+
 
 
 
@@ -265,7 +396,7 @@ const SearchWidget = () => {
             inputValue={cityName}
             variant="bordered"
             isRequired
-            placeholder="Enter Location or Hotel Name"
+            placeholder="Enter Location"
             startContent={
               <Icon icon="mynaui:location" width="24" height="24" />
             }
@@ -275,18 +406,55 @@ const SearchWidget = () => {
 
               },
             }}
-            onSelectionChange={handleSuggestionSelection}
-            onInputChange={handleInputChange}
+            selectedKey={selectedCityKey}
+            onInputChange={handleCityInputChange}
+            onSelectionChange={(key) => {
+              setSelectedCityKey(key);
+              handleCitySuggestionSelection(key);
+            }}
 
 
 
           >
+
             {citySuggestion.map((item) => (
               <AutocompleteItem key={item.DestinationId}>
-                {
-                  `${item?.CityName}, ${item?.CountryName}`
-                }
+                {`${item?.CityName}`}
+              </AutocompleteItem>
+            ))}
 
+          </Autocomplete>
+
+
+          {/* for property autocomplete */}
+
+          <Autocomplete
+            inputValue={propertyName}
+            variant="bordered"
+            isRequired
+            placeholder="Search Property"
+            startContent={
+              <Icon icon="mynaui:location" width="24" height="24" />
+            }
+            inputProps={{
+              classNames: {
+                inputWrapper: "bg-white h-[50px] rounded-[5px]",
+
+              },
+            }}
+            selectedKey={selectedPropertyKey}
+            onInputChange={handlePropertyInputChange}
+            onSelectionChange={(key) => {
+              setSelectedPropertyKey(key);
+              handlePropertySelection(key);
+            }}
+
+
+
+          >
+            {propertySuggestion.map((item) => (
+              <AutocompleteItem key={item.MHHotelID}>
+                {`${item?.HotelName}`}
               </AutocompleteItem>
             ))}
           </Autocomplete>
@@ -470,7 +638,7 @@ const SearchWidget = () => {
 
                       {rooms.length > 1 && (
                         <Button
-                          onClick={() => handleRemoveRoom(index)}
+                          onPress={() => handleRemoveRoom(index)}
                           className="bg-transparent text-[#b81a52] text-[12px] p-0 h-[30px] mt-3 rounded-[5px] font-semibold"
                         >
                           Remove Room
@@ -481,14 +649,14 @@ const SearchWidget = () => {
 
                   <div className="flex justify-between gap-2 mt-3">
                     <Button
-                      onClick={handleAddRoom}
+                      onPress={handleAddRoom}
                       disabled={rooms.length >= MAX_ROOMS}
                       className="bg-[#00575e] text-white text-[12px] px-3 h-[30px] rounded-[5px] font-semibold"
                     >
                       Add Room
                     </Button>
                     <Button
-                      onClick={handleDone}
+                      onPress={handleDone}
                       className="bg-[#dddddd] text-black text-[12px] px-3 h-[30px] rounded-[5px] font-semibold"
                     >
                       Done
