@@ -11,6 +11,9 @@ const HotelDetailsResult=()=>{
         (i) => i?.Caption?.toLowerCase() === "room"
       );
       const { isOpen, onOpen, onOpenChange } = useDisclosure();
+      const info = details?.detailResult[0];
+      const amenities = info?.Amenities?.AmenitiesDetails;
+      console.log({info , amenities});
     // console.log({aa:details?.detailResult[0]?.Info,aanch:details?.roomResult[0]?.ListOfRooms[0]?.ListOfRoom[0]?.RoomRates[0],AllImages});
     const roomRes = details?.roomResult[0]?.RoomDetails[0] || [];
     const date =(cncldd)=>{
@@ -95,94 +98,12 @@ const HotelDetailsResult=()=>{
                       )}
                         </div>
                          </div>
-                ))}
-               
-
-                {/* <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
-                    <div className='border-r-1 border-solid border-[#dddddd] p-2'>
-                    <Image src='https://c.myholidays.com/giata/MH-00151158/l/0.jpeg' className='rounded-none w-full' classNames={{
-                        wrapper:"!max-w-full"
-                    }}/>
-                    <h5 className='my-2 text-[18px] font-semibold text-black'>Executive Room</h5>
-                    </div>
-
-                    <div className='border-r-1 border-solid border-[#dddddd]'>
-                       <h4 className='bg-[#dddddd] text-[174982] text-[14px] font-semibold p-3'>Option 1</h4>    
-                       <ul className='p-2 '>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Room Only</li>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Free Cancellation till Jun 5, 2025</li>
-                       </ul> 
-                    </div>
-
-                    <div className='p-2'>
-                        <div className='flex justify-between items-center mb-2'>
-                        <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'> INR </span> 3,915.3 <span className='block text-[12px] font-normal'>avg/night</span></h3>
-                        <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Nows</Button>
-                        </div>
-                        <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
-                        <p className='text-danger text-[12px]'>Non-Refundable</p>
-                    </div>
-                </div>
-
-                <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
-                    <div className='border-r-1 border-solid border-[#dddddd] p-2'>
-                    <Image src='https://c.myholidays.com/giata/MH-00151158/l/0.jpeg' className='rounded-none w-full' classNames={{
-                        wrapper:"!max-w-full"
-                    }}/>
-                    <h5 className='my-2 text-[18px] font-semibold text-black'>Executive Room</h5>
-                    </div>
-
-                    <div className='border-r-1 border-solid border-[#dddddd]'>
-                       <h4 className='bg-[#dddddd] text-[174982] text-[14px] font-semibold p-3'>Option 1</h4>    
-                       <ul className='p-2 '>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Room Only</li>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Free Cancellation till Jun 5, 2025</li>
-                       </ul> 
-                    </div>
-
-                    <div className='p-2'>
-                        <div className='flex justify-between items-center mb-2'>
-                        <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'> INR </span> 3,915.3 <span className='block text-[12px] font-normal'>avg/night</span></h3>
-                        <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Nows</Button>
-                        </div>
-                        <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
-                        <p className='text-danger text-[12px]'>Non-Refundable</p>
-                    </div>
-                </div>
-
-                <div className='grid grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
-                    <div className='border-r-1 border-solid border-[#dddddd] p-2'>
-                    <Image src='https://c.myholidays.com/giata/MH-00151158/l/0.jpeg' className='rounded-none w-full' classNames={{
-                        wrapper:"!max-w-full"
-                    }}/>
-                    <h5 className='my-2 text-[18px] font-semibold text-black'>Executive Room</h5>
-                    </div>
-
-                    <div className='border-r-1 border-solid border-[#dddddd]'>
-                       <h4 className='bg-[#dddddd] text-[174982] text-[14px] font-semibold p-3'>Option 1</h4>    
-                       <ul className='p-2 '>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Room Only</li>
-                        <li className='flex gap-2 text-black mb-2 text-[16px]'><Icon icon="material-symbols-light:check-rounded" className='text-[#174982]' width="24" height="24" /> Free Cancellation till Jun 5, 2025</li>
-                       </ul> 
-                    </div>
-
-                    <div className='p-2'>
-                        <div className='flex justify-between items-center mb-2'>
-                        <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'> INR </span> 3,915.3 <span className='block text-[12px] font-normal'>avg/night</span></h3>
-                        <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Nows</Button>
-                        </div>
-                        <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
-                        <p className='text-danger text-[12px]'>Non-Refundable</p>
-                    </div>
-                </div> */}
-
-                
-
-                
+                ))}                
            </div>
 
            <div className='mt-5 border-1 border-solid border-[#dddddd]'>
             <h3 className='text-[16px] font-semibold text-black bg-[#dddddd] p-2'>Hotel Services</h3>
+                              
             <ul className='grid grid-cols-4 gap-2 p-2'>
                     <li className='text-[16px] text-black'>No pets or service animals allowed</li>
                     <li className='text-[16px] text-black'>Pets not allowed</li>
@@ -199,7 +120,7 @@ const HotelDetailsResult=()=>{
             </ul>
            </div>
 
-           <div className='my-5 border-1 border-solid border-[#dddddd]'>
+           {/* <div className='my-5 border-1 border-solid border-[#dddddd]'>
             <h3 className='text-[16px] font-semibold text-black bg-[#dddddd] p-2'>Cards Accepted</h3>
                 <div className='flex gap-5 p-2'>
                     <Icon icon="logos:mastercard" width="50" height="50" />
@@ -283,7 +204,7 @@ const HotelDetailsResult=()=>{
             <h6 className='text-[16px] text-[#174982] font-semibold'>Check-In : <span className='font-normal'>12:00 PM</span></h6>
             <h6 className='text-[16px] text-[#174982] font-semibold'>Pets : <span className='font-normal'>Pets not allowed</span></h6>
             </div>
-           </div>
+           </div> */}
         </div>
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="min-w-[650px]">
