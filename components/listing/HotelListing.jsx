@@ -1,6 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Image, Button } from "@heroui/react";
+import { Image, Button, Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter, useDisclosure, } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInfo } from "../../redux/slices/detailSlice";
@@ -20,6 +24,7 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImages, setModalImages] = useState([]);
   const img = details?.detailResult[0]?.RoomImages?.Images || [];
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
   console.log({img});
   useEffect(() => {
     if (listing?.listofHotel) {
@@ -32,7 +37,8 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   }, [listing,img]);
 
   const handleImageClick = (id) => {
-    dispatch(getInfo(id))   
+    dispatch(getInfo(id))  
+    onOpen();  
   };
 
   return (
@@ -113,17 +119,14 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
           ))
         )}
       </div>
-      {isModalOpen && (
-  <div className="fixed inset-0 z-[1000] bg-black bg-opacity-70 flex items-center justify-center">
-    <div className="bg-white p-4 rounded max-w-4xl w-full overflow-y-auto max-h-[90vh] relative">
-      <button
-        onClick={() => setIsModalOpen(false)}
-        className="absolute top-2 right-2 text-black text-xl"
-      >
-        ✕
-      </button>
-      <h3 className="text-xl font-semibold mb-4">Hotel Images</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+
+<Drawer className="max-w-[50%] z-[999] rounded-none" isOpen={isOpen} onOpenChange={onOpenChange}>
+        <DrawerContent>
+       
+            <>
+              <DrawerBody>
+                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {modalImages.map((img, i) => (
           <img
             key={i}
@@ -133,9 +136,19 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
           />
         ))}
       </div>
-    </div>
-  </div>
-)}
+              </DrawerBody>
+             
+            </>
+      
+        </DrawerContent>
+      </Drawer>
+
+
+    
+
+
+
+
 
     </section>
     
