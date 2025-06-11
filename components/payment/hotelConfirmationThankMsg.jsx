@@ -1,5 +1,5 @@
 import React from "react";
-import imageIcon from "../../app/assets/hotel_img.png";
+import imageIcon from "../../public/asstes/hotel_img.png";
 import Image from "next/image";
 
 const GetBookingStatus = ({ bookingDetails, bookiingStatus}) => {
