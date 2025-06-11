@@ -2,11 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     cityName : "",
-    propertyName : "",
+    propertyNames : "",
     destinationId : "",
     cityId : "",
     countryCodes : "",
-
+    hotelId : ""
+ 
 }
 
 const searchSlice = createSlice(
@@ -17,8 +18,8 @@ const searchSlice = createSlice(
             setCityName(state, action) {
                 state.cityName = action.payload
             },
-            setPropertyName(state, action) {
-                state.propertyName = action.payload
+            setPropertyNames(state, action) {
+                state.propertyNames = action.payload
             },
             setDestinationId(state, action) {
                 state.destinationId = action.payload
@@ -28,6 +29,9 @@ const searchSlice = createSlice(
             },
             setCountryCodes(state, action){
                 state.countryCodes = action.payload
+            },
+            setHotelId(state, action){
+                state.hotelId = action.payload
             }
            
         }
@@ -36,10 +40,11 @@ const searchSlice = createSlice(
 
 export const {
 setCityName,
-setPropertyName,
+setPropertyNames,
 setDestinationId,
 setCityId,
-setCountryCodes
+setCountryCodes,
+setHotelId
 } = searchSlice.actions
 
 export default searchSlice.reducer
