@@ -41,7 +41,7 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
                 <Image
                   src={hotel.HotelImage}
                   alt={hotel.HotelName}
-                  className="w-full md:absolute xl:static top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none"
+                  className="w-full  top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none"
                   classNames={{ wrapper: "!max-w-full" }}
                 />
                 <span
