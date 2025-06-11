@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Slider, Checkbox, Button, dropdown } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import {useFilter} from "../hooks/FilterHooks"
@@ -19,6 +19,15 @@ const FilterListing = () => {
   const [isDropdown, setIsDropdown] = useState("null");
   const [isMobile, setIsMobile] = useState(false);
   const [filter, setFilter] = useFilter()
+  const [lowPrice, setLowPrice] = useState(0);
+   const [minValue, setMinValue] = useState(0); // min value of the slider
+  const [maxValue, setMaxValue] = useState(1000); 
+
+  // fetching state from redux store
+  const state = useSelector((state) => state?.listing);
+  const filterData = useSelector(
+    (state) => state?.listing?.listingResult[0]?.Filter
+  );
 
 
    const searchId = useSelector(
@@ -63,7 +72,7 @@ const FilterListing = () => {
       // const pageNumber = listing?.pageNumber || 1;
       // filter.pageNumber = pageNumber;
       // dispatch(setFilterState(filter));
-      const ApiUrl = `https://prodapi.myholidays.com/hotelsearch//api/search/HotelFilter?PageNumber=${filter.pageNumber}&SearchKey=${filter.SearchKey}&HotelName=${filter.HotelName}&SortByPrice=${filter.SortByPrice}&SortByDistance=&SortByRating=&SortByPopularity=&PriceRange=&StarRating=${join(filter.StarRating)}&Meal=${join(filter.Meal)}&Amenities=${join(filter.Amenities)}&NearByArea=${join(filter.NearByArea)}&AccommodationType=${join(filter.AccommodationType)}&PetFriendly=&AllergicFriendly=&Currency=${filter.Currency}&Suppliers=&Affiliate=0&${utm.queryParam}`;
+      const ApiUrl = `https://prodapi.myholidays.com/hotelsearch//api/search/HotelFilter?PageNumber=${filter.pageNumber ||1}&SearchKey=${filter.SearchKey}&HotelName=${filter.HotelName}&SortByPrice=${filter.SortByPrice}&SortByDistance=&SortByRating=&SortByPopularity=&PriceRange=${minValue}-${maxValue}&StarRating=${join(filter.StarRating)}&Meal=${join(filter.Meal)}&Amenities=${join(filter.Amenities)}&NearByArea=${join(filter.NearByArea)}&AccommodationType=${join(filter.AccommodationType)}&PetFriendly=&AllergicFriendly=&Currency=${filter.Currency}&Suppliers=&Affiliate=0&${utm.queryParam}`;
 
       const response = await axios.get(ApiUrl);
       const result = await response.data.ListOfHotels;
@@ -86,6 +95,10 @@ const FilterListing = () => {
       filterApi();
     }
   }, [filter]);
+
+  useEffect(() => {
+  filterApi();
+}, [filter, value]);
 
 
 
@@ -130,6 +143,10 @@ const FilterListing = () => {
 
 
 
+ 
+
+
+
 
 
 
@@ -142,6 +159,295 @@ const FilterListing = () => {
   };
 
 
+   //***************************filter handle input work***************** */
+
+   useEffect(() => {
+    if (state.listofHotel.length > 1) {
+      const price = state.listofHotel.map((item) => item.LowestPriceOriginal);
+      setLowPrice(Math.min(...price));
+    }
+  }, [state]);
+
+  // Memoize each filter section
+  const propertyTypes = useMemo(
+    () => filterData?.AccomodationTypes || [],
+    [filterData]
+  );
+  const starRatings = useMemo(
+    () => filterData?.StarRatings || [],
+    [filterData]
+  );
+  const paymentModes = useMemo(
+    () => filterData?.PaymentModes || [],
+    [filterData]
+  );
+  const meals = useMemo(() => filterData?.Meals || [], [filterData]);
+  const amenities = useMemo(() => filterData?.Amenities || [], [filterData]);
+  const nearBy = useMemo(() => filterData?.NearBy || [], [filterData]);
+
+  //.......................................handle filter state by function....................................//
+
+const handleCheckBoxPropertyType = (e) => {
+    const { name, checked } = e.target;
+
+    setFilter((prevFilter) => {
+      const updated = checked
+        ? [...prevFilter.AccommodationType, name]
+        : prevFilter.AccommodationType.filter((item) => item !== name);
+
+      return {
+        ...prevFilter,
+        AccommodationType: updated,
+        run: true,
+      };
+    });
+  };
+   const handleCheckStarRating = (e) => {
+    e.preventDefault();
+
+    const { name, checked } = e.target;
+
+    if (checked) {
+      setFilter((prev) => {
+        const updateStar = {
+          ...prev,
+          StarRating: [...prev.StarRating, name],
+          run: true,
+        };
+
+        console.log(updateStar);
+        return updateStar;
+      });
+    } else {
+      setFilter((prev) => {
+        const updateStar = {
+          ...prev,
+          StarRating: prev.StarRating.filter((item) => item !== name),
+          run: true,
+        };
+
+        console.log(updateStar);
+        return updateStar;
+      });
+    }
+  };
+
+   const handleCheckAmenties = (e) => {
+    e.preventDefault();
+
+    const { name, checked } = e.target;
+
+    if (checked) {
+      setFilter((prev) => {
+        const updateStar = {
+          ...prev,
+          Amenities: [...prev.Amenities, name],
+          run: true,
+        };
+
+        console.log(updateStar);
+        return updateStar;
+      });
+    } else {
+      setFilter((prev) => {
+        const updateStar = {
+          ...prev,
+          Amenities: prev.Amenities.filter((item) => item !== name),
+          run: true,
+        };
+
+        console.log(updateStar);
+        return updateStar;
+      });
+    }
+  };
+
+  const handleCheckPayment = (e) => {
+    e.preventDefault();
+
+    const { name, checked } = e.target;
+
+    if (checked) {
+      setFilter((prev) => {
+        const updatePayment = {
+          ...prev,
+          paymnetMode: [...prev.paymnetMode, name],
+          run: true,
+        };
+
+        console.log(updatePayment);
+        return updatePayment;
+      });
+    } else {
+      setFilter((prev) => {
+        const updatePayment = {
+          ...prev,
+          paymnetMode: prev.paymnetMode.filter((item) => item !== name),
+          run: true,
+        };
+
+        console.log(updatePayment);
+        return updatePayment;
+      });
+    }
+  };
+
+  const handleMealBox = (e) => {
+    e.preventDefault();
+
+    const { name, checked } = e.target;
+
+    if (checked) {
+      setFilter((prev) => {
+        const updateMeal = {
+          ...prev,
+          Meal: [...prev.Meal, name],
+          run: true,
+        };
+
+        console.log(updateMeal);
+        return updateMeal;
+      });
+    } else {
+      setFilter((prev) => {
+        const updateMeal = {
+          ...prev,
+          Meal: prev.Meal.filter((item) => item !== name),
+          run: true,
+        };
+
+        console.log(updateMeal);
+        return updateMeal;
+      });
+    }
+  };
+
+  const handleNearyBy = (e) => {
+    e.preventDefault();
+
+    const { name, checked } = e.target;
+
+    if (checked) {
+      setFilter((prev) => {
+        const updateNearByArea = {
+          ...prev,
+          NearByArea: [...prev.NearByArea, name],
+          run: true,
+        };
+
+        console.log(updateNearByArea);
+        return updateNearByArea;
+      });
+    } else {
+      setFilter((prev) => {
+        const updateNearByArea = {
+          ...prev,
+          NearByArea: prev.NearByArea.filter((item) => item !== name),
+          run: true,
+        };
+
+        console.log(updateNearByArea);
+        return updateNearByArea;
+      });
+    }
+  };
+
+  const handleSortOrderChange = (e) => {
+    const { value } = e.target;
+
+    setFilter((prev) => {
+      const updated = {
+        ...prev,
+        SortByPrice: value,
+        run: true,
+      };
+
+      console.log("Updated Sort Order:", updated);
+      return updated;
+    });
+  };
+  
+  //..........................................End.................................................//
+
+  //clear buttons logic
+  const handleClearSort = () => {
+    setFilter((prev) => ({
+      ...prev,
+      SortByPrice: "",
+      run: true,
+    }));
+  };
+
+  const handleClearPropertyTypes = () => {
+    setFilter((prev) => ({
+      ...prev,
+      AccommodationType: [],
+      run: true,
+    }));
+  };
+
+  const handleClearStarRating = () => {
+    setFilter((prev) => ({
+      ...prev,
+      StarRating: [],
+      run: true,
+    }));
+  };
+
+  const handleClearPaymentMode = () => {
+    setFilter((prev) => ({
+      ...prev,
+      paymnetMode: [],
+      run: true,
+    }));
+  };
+
+  const handleClearMeal = () => {
+    setFilter((prev) => ({
+      ...prev,
+      Meal: [],
+      run: true,
+    }));
+  };
+
+  const handleClearAmenities = () => {
+    setFilter((prev) => ({
+      ...prev,
+      Amenities: [],
+      run: true,
+    }));
+  };
+
+  const handleClearNearByArea = () => {
+    setFilter((prev) => ({
+      ...prev,
+      NearByArea: [],
+      run: true,
+    }));
+  };
+  const clearALlFilters = (e) => {
+    setFilter(() => ({
+      PageNumber: 1,
+      SearchKey: searchId,
+      HotelName: "",
+      SortByPrice: "",
+      PriceRange: "",
+      StarRating: [],
+      paymnetMode: [],
+      Meal: [],
+      Amenities: [],
+      NearByArea: [],
+      AccommodationType: [],
+      PetFriendly: false,
+      Currency: "INR",
+      Suppliers: "",
+      Affiliate: 0,
+      utm_source: "",
+      utm_medium: "",
+      run: true,
+      Currency: "INR",
+    }));
+  };
 
 
 
@@ -166,8 +472,8 @@ const FilterListing = () => {
                   Price
                 </span>
               }
-              maxValue={1000}
-              minValue={0}
+              maxValue={maxValue}
+              minValue={minValue}
               step={10}
               value={value}
               onChange={setValue}
@@ -194,30 +500,19 @@ const FilterListing = () => {
             {(isMobile || isDropdown === "dropdown1") && (
               <div className="static xl:absolute  top-[50px] left-0 bg-white px-2 py-5 shadow w-full xl:w-[250px] mt-2 xl:mt-0 z-[99] ">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex justify-between w-full">
-                    <Checkbox>5 Star </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>2 Star </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>3 Star </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>4 Star </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>1 Star </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Unrated </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
+                {starRatings && starRatings.map((data) =>(<div className="flex justify-between w-full">
+                  <Checkbox
+                  id={data.Rating}
+                  name={data.Rating}
+                  value={data.Rating}
+                   onChange={handleCheckStarRating}
+                  >
+                    {data.Rating} 
+                    
+                  </Checkbox>{" "}
+                  <span className="text-[14px] text-[#666666]">1</span>
+                </div>))}
+                
                   <div className="flex justify-end w-full">
                     <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">
                       Reset
@@ -243,14 +538,17 @@ const FilterListing = () => {
             {(isMobile || isDropdown === "dropdown2") && (
               <div className="static xl:absolute  top-[50px] left-0 bg-white px-2 py-5 shadow w-full xl:w-[250px] mt-2 xl:mt-0  z-[9]">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Room Only </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
+                  {meals && meals.map((data,i) => (<div className="flex justify-between w-full" key={i}>
+                    <Checkbox
+                    key={i}
+                    name={data.Value}
+                    id={data.Value}
+                    value={data.Value}
+                    onChange={handleMealBox}
+                    >{data.Value} </Checkbox>{" "}
+                    {/* <span className="text-[14px] text-[#666666]">1</span> */}
                   </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Breakfast </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
+                ))}
 
                   <div className="flex justify-end w-full">
                     <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">
@@ -279,30 +577,17 @@ const FilterListing = () => {
             {(isMobile || isDropdown === "dropdown3") && (
               <div className="static xl:absolute  top-[50px] left-0 bg-white px-2 py-5 shadow w-full xl:w-[250px] mt-2 xl:mt-0 z-[99] ">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Wifi</Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Air Condition </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>BreakFast</Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>SPA </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Parking </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Pool </Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
+                  {amenities && amenities.map((data,i) =>(<div className="flex justify-between w-full" key={i}>
+                    <Checkbox
+                    key={i}
+                    name={data.Value}
+                    id={data.Value}
+                    value={data.Value}
+                    onChange={handleMealBox}
+                >{data.value}</Checkbox>{" "}
+                    {/* <span className="text-[14px] text-[#666666]">1</span> */}
+                  </div>))}
+               
                   <div className="flex justify-end w-full">
                     <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">
                       Reset
@@ -332,12 +617,18 @@ const FilterListing = () => {
             {(isMobile || isDropdown === "dropdown4") && (
               <div className="static xl:absolute  top-[50px] left-0 right-0   bg-white px-2 py-5 shadow w-full mt-2 xl:mt-0  z-[99]">
                 <div className="grid grid-cols-1 xl:grid-cols-4 items-center gap-2 xl:gap-5">
-                  <div className="flex gap-2 w-full">
-                    <Checkbox>Near Souq Waqif</Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">(1)</span>
-                  </div>
+                  {nearBy && nearBy.map((data,i) => (<div className="flex gap-2 w-full" key={i}>
+                    <Checkbox
+                     key={i}
+                     name={data.Value}
+                     id={data.Value}
+                      value={data.Value}
+                     onChange={handleNearyBy}
+                    >{data.Value}</Checkbox>{" "}
+                    {/* <span className="text-[14px] text-[#666666]">(1)</span> */}
+                  </div>))}
 
-                  <div className="flex gap-2 w-full">
+                  {/* <div className="flex gap-2 w-full">
                     <Checkbox>Near Qatar National Museum</Checkbox>{" "}
                     <span className="text-[14px] text-[#666666]">(1)</span>
                   </div>
@@ -390,7 +681,7 @@ const FilterListing = () => {
                   <div className="flex gap-2 w-full">
                     <Checkbox>Near Katara Beach</Checkbox>{" "}
                     <span className="text-[14px] text-[#666666]">(1)</span>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex justify-end w-full">
                   <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">
@@ -420,14 +711,21 @@ const FilterListing = () => {
             {(isMobile || isDropdown === "dropdown5") && (
               <div className="static xl:absolute  top-[50px] left-0 bg-white px-2 py-5 shadow w-full xl:w-[250px] mt-2 xl:mt-0 z-[99] ">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Hotel</Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
-                  <div className="flex justify-between w-full">
+                  {propertyTypes && propertyTypes.map((data) => (<div className="flex justify-between w-full">
+                    <Checkbox
+                    name={data.Value}
+                    id={data.Value}
+                    onChange={handleCheckBoxPropertyType}
+                    value={data.Value}
+                    checked={filter.AccommodationType.includes(data.Value)}
+                    >{data.Value}
+                    </Checkbox>{" "}
+                    {/* <span className="text-[14px] text-[#666666]">1</span> */}
+                  </div>))}
+                  {/* <div className="flex justify-between w-full">
                     <Checkbox>Apratment </Checkbox>{" "}
                     <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
+                  </div> */}
 
                   <div className="flex justify-end w-full">
                     <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">
@@ -457,11 +755,18 @@ const FilterListing = () => {
             />
             {(isMobile || isDropdown === "dropdown6") && (
               <div className="static xl:absolute  top-[50px] left-0 bg-white p-2 shadow w-full xl:w-[250px] mt-2 xl:mt-0 z-[9]">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex justify-between w-full">
-                    <Checkbox>Pay Now</Checkbox>{" "}
-                    <span className="text-[14px] text-[#666666]">1</span>
-                  </div>
+                <div className="flex flex-col items-center gap-2" >
+                  {paymentModes && paymentModes.map((data,i) => (<div className="flex justify-between w-full" key={i}>
+                    <Checkbox
+                    value={data.Mode}
+                     id={data.Mode}
+                    name={data.Mode}
+                    onChange={handleCheckPayment}
+                  
+              
+                    >{data.Mode}</Checkbox>{" "}
+                    {/* <span className="text-[14px] text-[#666666]">1</span> */}
+                  </div>))}
 
                   <div className="flex justify-end w-full">
                     <Button className="bg-transparent text-danger justify-end border-1 p-0 border-none">

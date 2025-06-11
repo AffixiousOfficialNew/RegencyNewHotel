@@ -88,7 +88,7 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
                   </div>
                   <p className="text-[14px] text-[#757575]">
                     {hotel.HotelAddress}
-                    <Button className="p-0 bg-transparent text-[#013ca6] h-[20px]">View Map</Button>
+                    {/* <Button className="p-0 bg-transparent text-[#013ca6] h-[20px]">View Map</Button> */}
                   </p>
                   <h3 className="text-[#d63565] text-[14px] font-semibold">{hotel.HotelZone}</h3>
                   <p className="bg-[#707070] px-3 py-2 inline-block text-white text-[12px] rounded-[10px] mt-3">
