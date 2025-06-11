@@ -534,8 +534,7 @@ const paymentAuthRequestHandler = async () => {
 }
 };
  
-const globalCurrency = useSelector((state) => state.listing.currency)
-
+const globalCurrency = useSelector((state) => state.listing.currency) || localStorage.getItem("globalCurrency") || "INR"
  
   const startPaymentFlow = async () => {
    const formData = watch();
@@ -1398,7 +1397,7 @@ const renderAlert = () => {
                 endContent={<Icon icon="lucide:chevron-right" />}
                 className="min-w-[120px] rounded-[5px] bg-[#b81a52] text-white"
               >
-              "Make Payment"
+              Make Payment
               </Button>
             </div>
           </div>

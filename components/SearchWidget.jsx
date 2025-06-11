@@ -570,7 +570,7 @@ useEffect(() => {
                           <Icon
                             icon="meteor-icons:plus"
                             onClick={() => updateAdults(index, 1)}
-                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#00575e]"
+                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#174982]"
                           />
                         </div>
                       </div>
@@ -588,7 +588,7 @@ useEffect(() => {
                           <Icon
                             icon="meteor-icons:minus"
                             onClick={() => updateChildren(index, -1)}
-                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#00575e]"
+                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#174982]"
                           />
                           <span className="w-[20px] text-center">
                             {room.children}
@@ -596,7 +596,7 @@ useEffect(() => {
                           <Icon
                             icon="meteor-icons:plus"
                             onClick={() => updateChildren(index, 1)}
-                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#00575e]"
+                            className="cursor-pointer w-[25px] bg-[#f5f5f5] h-[25px] text-[#174982]"
                           />
                         </div>
                       </div>
@@ -651,7 +651,7 @@ useEffect(() => {
                     <Button
                       onPress={handleAddRoom}
                       disabled={rooms.length >= MAX_ROOMS}
-                      className="bg-[#00575e] text-white text-[12px] px-3 h-[30px] rounded-[5px] font-semibold"
+                      className="bg-[#174982] text-white text-[12px] px-3 h-[30px] rounded-[5px] font-semibold"
                     >
                       Add Room
                     </Button>

@@ -199,8 +199,8 @@ export const GuestDetails = ({
             return (
               <div key={roomNumber}>
                 <div
-                  className="flex items-center bg-teal-600 rounded-[5px] p-3 text-white"
-                  style={{ margin: "15px 0" }}
+                  className="flex items-center rounded-[5px] p-3 text-white"
+                  style={{ margin: "15px 0",  backgroundColor:"#e41b23" }}
                 >
                   <div className="mr-4 px-2 py-1 font-medium">{`Room ${roomNumber}:`}</div>
                   <div className="text-sm">Room Type: {data?.hotelDetails?.HotelRooms?.[0]?.ListOfRoom?.[0]?.RoomType}</div>

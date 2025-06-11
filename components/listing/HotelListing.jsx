@@ -6,23 +6,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { getInfo } from "../../redux/slices/detailSlice";
 import Amenities from "../Amenities";
 import SkeletonLoader from "../SkeletonLoader";
+import Link from "next/link";
 
 const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   const dispatch = useDispatch();
   const { listing, details } = useSelector((state) => state);
+  const searchId = listing?.listingResult[0]?.SearchId;
+  const globalCurrency = listing?.currency;
   const hotels = listing?.listofHotel || [];
+  const data = listing?.listingResult[0];
+  const info = data?.SearchRequest;
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState([]);
+  const img = details?.detailResult[0]?.RoomImages?.Images || [];
+  console.log({img});
   useEffect(() => {
     if (listing?.listofHotel) {
       setLoading(false);
     }
-  }, [listing]);
+    if(img.length>0){
+    setModalImages(img);
+    setIsModalOpen(true); 
+    }
+  }, [listing,img]);
 
   const handleImageClick = (id) => {
-    dispatch(getInfo(id));
+    dispatch(getInfo(id))   
   };
 
   return (
+    <>
     <section>
       <div className="w-full px-2 mx-auto">
         {loading || hotels.length === 0 ? (
@@ -37,11 +51,11 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
     setIsInfoOpen(true);
   }}
             >
-              <div className="w-full md:w-[40%] xl:w-[20%] relative overflow-hidden rounded-[10px]">
+              <div className="w-full md:w-[40%] xl:w-[20%] relative overflow-hidden rounded-[10px]">          
                 <Image
                   src={hotel.HotelImage}
                   alt={hotel.HotelName}
-                  className="w-full md:absolute xl:static top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none"
+                  className="w-full  top-0 bottom-0 h-[340px] xl:h-[250px] object-cover rounded-none"
                   classNames={{ wrapper: "!max-w-full" }}
                 />
                 <span
@@ -85,9 +99,13 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
                       {hotel.LowestPrice}
                     </h4>
                     <p>avg/night</p>
-                    <Button className="bg-[#d90e16] text-white rounded-[10px] mt-3 w-[180px]">
+                    <Link className="bg-[#d90e16] text-white rounded-[10px] mt-3 w-[180px] inline-flex items-center justify-center h-[50px]"
+                      href={`/hotels/hoteldetail?hotelId=${hotel?.Hotelcode}&SearchKey=${data?.SearchId}&nationality=${data?.SearchRequest?.Nationality}&destinationCode=${data?.SearchRequest?.DestinationID}&checkIn=27%20Jun%202025&checkOut=29%20Jun%202025&noOfRoom=1&paxInfo=${data?.SearchRequest?.PaxInfo}&aff=${data?.SearchRequest?.AffiliateId}&currency=${globalCurrency}&IsPromotedProperty=false&searchType=Hotel&countryCode=${data?.SearchRequest?.CountryCode}`}>
+
                       Select
-                    </Button>
+                    </Link>
+                    {/* <Button className="bg-[#d90e16] text-white rounded-[10px] mt-3 w-[180px]"> */}
+                    {/* </Button> */}
                   </div>
                 </div>
               </div>
@@ -95,7 +113,33 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
           ))
         )}
       </div>
+      {isModalOpen && (
+  <div className="fixed inset-0 z-[1000] bg-black bg-opacity-70 flex items-center justify-center">
+    <div className="bg-white p-4 rounded max-w-4xl w-full overflow-y-auto max-h-[90vh] relative">
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 right-2 text-black text-xl"
+      >
+        ✕
+      </button>
+      <h3 className="text-xl font-semibold mb-4">Hotel Images</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {modalImages.map((img, i) => (
+          <img
+            key={i}
+            src={img.URL}
+            alt={`Hotel image ${i + 1}`}
+            className="w-full h-48 object-cover rounded"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
     </section>
+    
+    </>
   );
 };
 
