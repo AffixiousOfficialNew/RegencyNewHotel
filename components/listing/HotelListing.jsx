@@ -17,17 +17,26 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
   const data = listing?.listingResult[0];
   const info = data?.SearchRequest;
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImages, setModalImages] = useState([]);
+  const img = details?.detailResult[0]?.RoomImages?.Images || [];
+  console.log({img});
   useEffect(() => {
     if (listing?.listofHotel) {
       setLoading(false);
     }
-  }, [listing]);
+    if(img.length>0){
+    setModalImages(img);
+    setIsModalOpen(true); 
+    }
+  }, [listing,img]);
 
   const handleImageClick = (id) => {
-    dispatch(getInfo(id));
+    dispatch(getInfo(id))   
   };
 
   return (
+    <>
     <section>
       <div className="w-full px-2 mx-auto">
         {loading || hotels.length === 0 ? (
@@ -104,7 +113,33 @@ const HotelListing = ({ setSelectedHotel, setIsInfoOpen  }) => {
           ))
         )}
       </div>
+      {isModalOpen && (
+  <div className="fixed inset-0 z-[1000] bg-black bg-opacity-70 flex items-center justify-center">
+    <div className="bg-white p-4 rounded max-w-4xl w-full overflow-y-auto max-h-[90vh] relative">
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 right-2 text-black text-xl"
+      >
+        ✕
+      </button>
+      <h3 className="text-xl font-semibold mb-4">Hotel Images</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {modalImages.map((img, i) => (
+          <img
+            key={i}
+            src={img.URL}
+            alt={`Hotel image ${i + 1}`}
+            className="w-full h-48 object-cover rounded"
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
     </section>
+    
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
 import React from "react";
 import { Card, CardBody, Divider, Image } from "@heroui/react";
 import { Icon } from "@iconify/react";
-import imageIcon from "../../app/assets/hotel_img.png";
+// import imageIcon from "../../app/asstes/hotel_img.png";
+import imageIcon from "../../public/asstes/hotel_img.png";
 import moment from "moment";
 import { dateDiff } from "../../services/paymentApi";
 
