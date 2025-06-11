@@ -249,8 +249,6 @@ const SearchWidget = () => {
   // dispatch(setDestinationId(finalDestinationId))
   // dispatch(setCityId(finalCityId))
   // dispatch(setCountryCodes(finalCountryCode))
-<<<<<<< HEAD
-=======
 
 
 
@@ -349,7 +347,6 @@ useEffect(() => {
     setDestinationId(apiReduxDestinaionId)
   }
 }, [apiReduxPropertyName]);
->>>>>>> main
 
 
   const handleSearchBtn = async () => {
