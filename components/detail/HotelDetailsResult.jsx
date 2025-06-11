@@ -3,6 +3,7 @@ import {Image , Button, useDisclosure, Modal, ModalContent, ModalHeader, ModalBo
 import { Icon } from "@iconify/react";
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 
 const HotelDetailsResult=()=>{
     const {details} = useSelector((state)=>state);
@@ -17,6 +18,21 @@ const HotelDetailsResult=()=>{
         // console.log(formattedDate); 
         return formattedDate;
     }
+    if (typeof window !== "undefined") {
+        window.localStorage.setItem(
+          "detailResp",
+          JSON.stringify(details?.detailResult[0])
+        );
+      }
+    const searchKey = details?.roomResult[0]?.SearchKey;
+    const router = useRouter();
+    const handleBookNow = (room) => {
+          const rateId = room?.ListOfRoom[0]?.RoomRates[0]?.RateCode;
+          const roomId = room?.ListOfRoom[0]?.RoomId;
+          const hotelID = details?.detailResult[0]?.Info?.MYHHotelCode;
+          
+            router.push(`/hotelpayment?searchKey=${searchKey}&roomID=${roomId}&hotelID=${hotelID}&rateID=${rateId}&culture=en-GB`);
+      };
     return(
         <>
          <div className='bg-white border-t-1 border-b-1 border-solid border-[#dddddd] p-5 mb-5'>
@@ -60,7 +76,7 @@ const HotelDetailsResult=()=>{
                         </div><div className='p-2'>
                             <div className='flex justify-between items-center mb-2'>
                                 <h3 className='text-[24px] text-black font-semibold'><span className='text-[16px]'>{room?.ListOfRoom[0]?.RoomRates[0]?.Currency} </span>{room?.ListOfRoom[0]?.RoomRates[0]?.TotalRoomPrice}<span className='block text-[12px] font-normal'>avg/night</span></h3>
-                                <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]'>Book Now</Button>
+                                <Button className='bg-[#d90e16] text-white rounded-[10px] hover:bg-[#d90e16]' onPress={() => handleBookNow(room)}>Book Now</Button>
                             </div>
                             <p className='text-[#006837] text-[12px] flex gap-1 items-center mb-2'><Icon icon="icon-park-solid:check-one" width="20" height="20" /> Recommended for you</p>
                             {room?.ListOfRoom[0]?.RoomRates[0]

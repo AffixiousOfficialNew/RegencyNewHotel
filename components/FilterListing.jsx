@@ -6,7 +6,7 @@ const FilterListing = () => {
   const dropdownRef = useRef(null);
   const [value, setValue] = React.useState([100, 300]);
   const [isDropdown, setIsDropdown] = useState("null");
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);

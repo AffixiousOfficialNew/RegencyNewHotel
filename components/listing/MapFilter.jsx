@@ -1,9 +1,15 @@
 import React from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow} from "@react-google-maps/api";
-import { Image, Button } from "@heroui/react";
+import { Image, Button , Link } from "@heroui/react";
 import Amenities from "../../components/Amenities";
 import { Icon } from "@iconify/react";
+import { useSelector } from "react-redux";
 const MapFilter = ({ latitude, longitude , selectedHotel , isInfoOpen, setIsInfoOpen  }) => {
+  console.log({selectedHotel});
+  const { listing } = useSelector((state) => state);
+  const data = listing?.listingResult[0];
+  const info = data?.SearchRequest;
+  console.log({data,info});
   const containerStyle = {
     width: "100%",
     height: "100vh",
@@ -32,7 +38,7 @@ const MapFilter = ({ latitude, longitude , selectedHotel , isInfoOpen, setIsInfo
             className="w-full h-[250px]"
             classNames={{ wrapper: "!max-w-full" }}
           />
-          <h2 className="font-bold my-2">{selectedHotel?.HotelName}</h2>
+          <h2 className="font-bold my-2 text-[24px]">{selectedHotel?.HotelName}</h2>
           <div className="flex gap-0">
             {[...Array(5)].map((_, i) => (
               <Icon
@@ -50,7 +56,15 @@ const MapFilter = ({ latitude, longitude , selectedHotel , isInfoOpen, setIsInfo
           <div className="flex gap-2 my-2 flex-wrap">
             <Amenities amenities={selectedHotel?.amenitiesType || []} />
           </div>
+          <div className="flex justify-between w-full pb-2 items-center">
+          <div className="">
+          <p className="font-semibold text-[24px] text-[#000000]">{selectedHotel?.SelectedCurrency} {selectedHotel?.LowestPrice}</p>
+          <p className="text-[14px] text-black mb-0">avg/night</p>
+          </div>
+          <Link className="bg-[#d90e16] text-white rounded-[10px] mt-3 w-[100px] inline-flex items-center justify-center h-[40px]" href={`/hotels/hoteldetail?hotelId=${selectedHotel?.Hotelcode}&SearchKey=${data?.SearchId}&nationality=${info?.Nationality}&destinationCode=${info?.DestinationID}&checkIn=27%20Jun%202025&checkOut=29%20Jun%202025&noOfRoom=1&paxInfo=${info?.PaxInfo}&aff=${info?.AffiliateId}&currency=${selectedHotel?.SelectedCurrency}&IsPromotedProperty=false&searchType=Hotel&countryCode=${info?.CountryCode}`}>Select</Link>
+          </div>
         </div>
+       
       </InfoWindow>
     )}
   </Marker>
