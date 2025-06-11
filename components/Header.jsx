@@ -20,6 +20,7 @@ import { setUtm } from "../redux/slices/utmSlice";
 
 import { getUTMParams } from "../utils/getutmParams";
 import { setCurrencyInStore, setIconCurr } from "../redux/slices/citySlice";
+import { ClientPageRoot } from "next/dist/client/components/client-page";
 function Header() {
 const dispatch = useDispatch()
 const newRef = useRef(null);
@@ -61,9 +62,13 @@ const [forgotMailErr, setForgotMailErr] = useState(false);
 const [loginFirstName, setLoginFirstName] = useState("");
 const { isLoggedIn, data } = useSelector((state) => state.auth);
  const [lgDrop, setLgDrop] = useState(false);
+
+
+ const globalCurrency = useSelector((state) => state?.listing?.currency);
+  const globalFlag = useSelector((state) => state?.listing?.currIcon);
   const [selectCurrency, setSelectCurrency] = useState({
-    code: "INR",
-    flag: "twemoji:flag-india",
+    code: globalCurrency||"INR",
+    flag: globalFlag||"twemoji:flag-india",
   });
   const [showCurrency, setCurrency] = useState(false);
 
@@ -163,6 +168,8 @@ const { isLoggedIn, data } = useSelector((state) => state.auth);
   };
 
   const handleSelectCurrency = (currencyCode, flagIcon) => {
+
+    console.log({ code: currencyCode, flag: flagIcon })
     setSelectCurrency({ code: currencyCode, flag: flagIcon });
     setCurrency(false);
     if (typeof window !== "undefined") {
