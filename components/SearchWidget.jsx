@@ -222,10 +222,10 @@ const SearchWidget = () => {
   const finalCityId = reduxCityId ? reduxCityId : reduxApiCityId
   const finalCountryCode = countryCode ? countryCode : reduxCountryCode
 
-  dispatch(setCityName(finalCityName))
-  dispatch(setDestinationId(finalDestinationId))
-  dispatch(setCityId(finalCityId))
-  dispatch(setCountryCodes(finalCountryCode))
+  // dispatch(setCityName(finalCityName))
+  // dispatch(setDestinationId(finalDestinationId))
+  // dispatch(setCityId(finalCityId))
+  // dispatch(setCountryCodes(finalCountryCode))
 
 
   const handleSearchBtn = async () => {

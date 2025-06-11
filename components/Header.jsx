@@ -19,6 +19,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import { setUtm } from "../redux/slices/utmSlice";
 
 import { getUTMParams } from "../utils/getutmParams";
+import { setCurrencyInStore, setIconCurr } from "../redux/slices/citySlice";
 function Header() {
 const dispatch = useDispatch()
 const newRef = useRef(null);

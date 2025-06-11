@@ -94,7 +94,8 @@ export const counterSlice = createSlice({
 
 // Export actions
 export const { resetListingResult ,setListofHotel
-    // ,setCurrencyInStore,setIconCurr,setResultCount,setPageNumber
+    ,setCurrencyInStore,setIconCurr,
+    // setResultCount,setPageNumber
 } = counterSlice.actions;
 
 // Export reducer

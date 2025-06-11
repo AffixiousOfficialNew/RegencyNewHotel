@@ -2,11 +2,99 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Slider, Checkbox, Button, dropdown } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import {useFilter} from "../hooks/FilterHooks"
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import {setListofHotel} from "../redux/slices/citySlice"
+
+
+
+
+
+
+
 const FilterListing = () => {
   const dropdownRef = useRef(null);
   const [value, setValue] = React.useState([100, 300]);
   const [isDropdown, setIsDropdown] = useState("null");
   const [isMobile, setIsMobile] = useState(false);
+  const [filter, setFilter] = useFilter()
+
+
+   const searchId = useSelector(
+    (state) => state?.listing?.listingResult[0]?.SearchId
+  );
+  const utm = useSelector((state) => state.utm);
+  const storeCurrency = useSelector((state) => state?.listing?.currency);
+
+   const dispatch = useDispatch();
+
+  // for search id  changes in listing
+  useEffect(() => {
+    if (searchId) {
+      setFilter((prev) => ({
+        ...prev,
+        SearchKey: searchId,
+      }));
+    }
+  }, [searchId]);
+
+  // for global currecy change in listing
+
+  useEffect(() => {
+    if (storeCurrency) {
+      setFilter((prev) => ({
+        ...prev,
+        Currency: storeCurrency,
+      }));
+    }
+  }, [storeCurrency]);
+
+
+   // join the string with ,
+  function join(arr) {
+    return arr.join(",");
+  }
+  const { listing } = useSelector((state) => state);
+
+  // filter Api code
+  const filterApi = async () => {
+    try {
+      // const pageNumber = listing?.pageNumber || 1;
+      // filter.pageNumber = pageNumber;
+      // dispatch(setFilterState(filter));
+      const ApiUrl = `https://prodapi.myholidays.com/hotelsearch//api/search/HotelFilter?PageNumber=${filter.pageNumber}&SearchKey=${filter.SearchKey}&HotelName=${filter.HotelName}&SortByPrice=${filter.SortByPrice}&SortByDistance=&SortByRating=&SortByPopularity=&PriceRange=&StarRating=${join(filter.StarRating)}&Meal=${join(filter.Meal)}&Amenities=${join(filter.Amenities)}&NearByArea=${join(filter.NearByArea)}&AccommodationType=${join(filter.AccommodationType)}&PetFriendly=&AllergicFriendly=&Currency=${filter.Currency}&Suppliers=&Affiliate=0&${utm.queryParam}`;
+
+      const response = await axios.get(ApiUrl);
+      const result = await response.data.ListOfHotels;
+      const resultCount = await response.data.ResultCount;
+
+      console.log({ result: result });
+
+      if (result) {
+        dispatch(setListofHotel(result));
+        // dispatch(setResultCount(resultCount));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useeffect for filter api call in changes in filter
+  useEffect(() => {
+    if (filter.run || filter.Currency) {
+      filterApi();
+    }
+  }, [filter]);
+
+
+
+
+
+
+
+
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1025);
@@ -17,6 +105,9 @@ const FilterListing = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+
+
 
   // Click outside handler only for desktop
   useEffect(() => {
@@ -37,6 +128,11 @@ const FilterListing = () => {
     };
   }, [isMobile]);
 
+
+
+
+
+
   const handleFilterDropdown = (dropdownName) => {
     if (isMobile) {
       // On mobile, do nothing to keep dropdown always open
@@ -44,6 +140,15 @@ const FilterListing = () => {
     }
     setIsDropdown((prev) => (prev === dropdownName ? null : dropdownName));
   };
+
+
+
+
+
+
+
+
+
 
   return (
     <section className="bg-[#f5f5f5] py-[30px]">
