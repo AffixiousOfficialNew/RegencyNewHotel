@@ -63,7 +63,7 @@ const Details = () =>{
     return(
         <section className="md:pb-0 pb-[100px]">
 
-           {/* <SearchWidget/> */}
+           <SearchWidget/>
            <div className="container mx-auto px-4 md:px-0">
            <div className="grid grid-cols-1 md:grid-cols-3 w-full py-5 gap-5">
             <div className="col-span-2">
