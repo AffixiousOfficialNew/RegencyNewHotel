@@ -7,9 +7,9 @@ import Footer from "../../../components/Footer";
 export default function ListingPage(){
     return(
         <section>
-        <Header/>
+      
             <ParentListing />
-            <Footer/>
+            
         </section>
     )
 }

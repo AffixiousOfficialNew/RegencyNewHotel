@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getInfo, getRoomDetails } from "../redux/slices/detailSlice";
 import SearchWidget from "./SearchWidget";
 import BannerDetails from "./detail/BannerDetails";
@@ -16,6 +16,9 @@ const Details = () =>{
     const searchParams = useSearchParams();
     const [hotelId, setHotelId] = useState();
     const [search,setsearch] = useState("");
+     const globalCurrency = useSelector((state) => state.listing.currency)
+
+
     useEffect(()=>{
         const fetchSearchKey = async ()=>{
             try {
@@ -32,7 +35,7 @@ const Details = () =>{
                 const cityId = searchParams.get('cityId') || 1;
                 const desId = searchParams.get('destinationId') || 0;
                 // console.log({nationality,checkIn,checkOut,noOfRoom,countryCode,paxInfo,currency,cityId,desId});
-                const API_URL = `https://stg.myholidays.com/hotelsearchtest//api/search/RoomAsyncV2?SearchKey=&nationality=${nationality}&destinationCode=${desId}&checkIn=${checkIn}&checkOut=${checkOut}&noOfRoom=${noOfRoom}&paxInfo=${paxInfo}&searchType=Direct&Affiliate=304&hotelId=${hotelId}&countryCode=${countryCode}&deviceType=Desktop&cultureID=en-GB&currency=INR&source=Direct&CustomerID=0&CustomerTypeID=0`
+                const API_URL = `https://stg.myholidays.com/hotelsearchtest//api/search/RoomAsyncV2?SearchKey=&nationality=${nationality}&destinationCode=${desId}&checkIn=${checkIn}&checkOut=${checkOut}&noOfRoom=${noOfRoom}&paxInfo=${paxInfo}&searchType=Direct&Affiliate=304&hotelId=${hotelId}&countryCode=${countryCode}&deviceType=Desktop&cultureID=en-GB&currency=${globalCurrency}&source=Direct&CustomerID=0&CustomerTypeID=0`
                 const response = await axios.get(API_URL);
                 const key = response?.data?.SearchKey;
                 if(key){
@@ -60,7 +63,7 @@ const Details = () =>{
     return(
         <section className="md:pb-0 pb-[100px]">
 
-           <SearchWidget/>
+           {/* <SearchWidget/> */}
            <div className="container mx-auto px-4 md:px-0">
            <div className="grid grid-cols-1 md:grid-cols-3 w-full py-5 gap-5">
             <div className="col-span-2">

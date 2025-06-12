@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Image , Button, useDisclosure, Modal, ModalContent, ModalHeader, ModalBody, TableHeader, TableBody, TableRow, TableCell, ModalFooter, Table, TableColumn} from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useSelector } from 'react-redux';
@@ -36,6 +36,20 @@ const HotelDetailsResult=()=>{
           
             router.push(`/hotelpayment?searchKey=${searchKey}&roomID=${roomId}&hotelID=${hotelID}&rateID=${rateId}&culture=en-GB`);
       };
+
+
+       const globalCurrency = useSelector((state) => state.listing.currency);
+
+  const [prevCurrency, setPrevCurrency] = useState(globalCurrency);
+
+  useEffect(() => {
+    if (prevCurrency !== globalCurrency) {
+      setPrevCurrency(globalCurrency);
+      window.location.reload();
+    }
+  }, [globalCurrency]);
+
+  const parsedAmenities = typeof amenities === 'string' ? JSON.parse(amenities) : amenities;
     return(
         <>
          <div className='bg-white border-t-1 border-b-1 border-solid border-[#dddddd] p-5 mb-5'>
@@ -57,7 +71,7 @@ const HotelDetailsResult=()=>{
            <div className='border-1 border-solid border-[#dddddd] mb-5'>
                
                 {roomRes?.map((room, index) => (
-                     <div className='grid grid-cols-1 md:grid-cols-3 gap-0 border-b border-solid border-[#dddddd] '>
+                     <div className='grid grid-cols-1 md:grid-cols-3 gap-0 border-b border-solid border-[#dddddd] ' key={index}>
                       <div // key={index}
                         className='border-r-1 border-solid border-[#dddddd] p-2'>
                         <Image src={
@@ -104,19 +118,12 @@ const HotelDetailsResult=()=>{
            <div className='mt-5 border-1 border-solid border-[#dddddd]'>
             <h3 className='text-[16px] font-semibold text-black bg-[#dddddd] p-2'>Hotel Services</h3>
                               
-            <ul className='grid grid-cols-4 gap-2 p-2'>
-                    <li className='text-[16px] text-black'>No pets or service animals allowed</li>
-                    <li className='text-[16px] text-black'>Pets not allowed</li>
-                    <li className='text-[16px] text-black'>No alcohol allowed onsite</li>
-                    <li className='text-[16px] text-black'>No alcohol served onsite</li>
-                    <li className='text-[16px] text-black'>Coffee/tea in common areas</li>
-                    <li className='text-[16px] text-black'>Shopping center shuttle (surcharge)</li>
-                    <li className='text-[16px] text-black'>Elevator</li>
-                    <li className='text-[16px] text-black'>Rooftop terrace</li>
-                    <li className='text-[16px] text-black'>Fitness facilities</li>
-                    <li className='text-[16px] text-black'>Full-service spa</li>
-                    <li className='text-[16px] text-black'>24-hour front desk</li>
-                    <li className='text-[16px] text-black'>Conference space</li>
+            <ul className='grid grid-cols-1 md:grid-cols-3 gap-2 p-2'>
+                  {Array.isArray(parsedAmenities) && parsedAmenities.map((item, index) => (
+    <li key={index} className="text-[16px] text-black flex items-center">
+      <Icon icon="uit:angle-double-right" width="24" height="24" /> {item.Aminitiesdescription}
+    </li>
+  ))}
             </ul>
            </div>
 

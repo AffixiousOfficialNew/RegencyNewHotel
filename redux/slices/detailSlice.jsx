@@ -87,7 +87,7 @@ export const counterSlice = createSlice({
     extraReducers: (builder) => {
       builder.addCase(getInfo.fulfilled, (state, action) => {
           if (action?.payload) {
-            state.detailResult = [...state.detailResult, action.payload];
+            state.detailResult = [action.payload];
           }
         })
         .addCase(getInfo.rejected, (state, action) => {

@@ -3,7 +3,8 @@ import "@/styles/globals.css";
 import { Viewport } from "next";
 import clsx from "clsx";
 import { Providers } from "../redux/providers";
-
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export const viewport= {
   themeColor: [
@@ -23,8 +24,9 @@ export default function RootLayout({
       >
       <Providers>
           <div>
+            <Header/>
             <main>{children}</main>
-            
+            <Footer/>
            
           </div>
       </Providers>
