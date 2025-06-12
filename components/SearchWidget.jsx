@@ -12,10 +12,12 @@ import {
   SelectItem,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useSearchParams } from "next/navigation";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { CalendarDate } from '@internationalized/date';
 
 
 
@@ -37,27 +39,65 @@ const SearchWidget = () => {
   const [selectedProperty, setSelectedProperty] = useState()
   const [selectedCityKey, setSelectedCityKey] = useState(null);
   const [selectedPropertyKey, setSelectedPropertyKey] = useState(null);
+  const searchParams = useSearchParams();
 
 
+
+  // const [selectedDates, setSelectedDates] = useState({
+ 
+  //   start: currentDate,
+  //   end: currentDate.add({ days: 2 }),
+  // });
   const [selectedDates, setSelectedDates] = useState({
-    start: currentDate,
-    end: currentDate.add({ days: 2 }),
+    start: null,
+    end: null,
   });
+
+
+  useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const checkIn = urlParams.get('checkIn');   // e.g. "16 Jul 2025"
+  const checkOut = urlParams.get('checkOut'); // e.g. "20 Jul 2025"
+
+  const parseDateFromUrl = (str) => {
+    if (!str) return null;
+    const [day, monthStr, year] = str.split(' ');
+    const month = new Date(`${monthStr} 1, 2000`).getMonth() + 1;
+    return new CalendarDate(parseInt(year), month, parseInt(day));
+  };
+
+  const parsedCheckIn = parseDateFromUrl(checkIn);
+  const parsedCheckOut = parseDateFromUrl(checkOut);
+
+  if (parsedCheckIn && parsedCheckOut) {
+    setSelectedDates({
+      start: parsedCheckIn,
+      end: parsedCheckOut
+    });
+  }
+}, []);
+// const checkInDate = new Date(selectedDates.start.year, selectedDates.start.month - 1, selectedDates.start.day);
+// const checkOutDate = new Date(selectedDates.end.year, selectedDates.end.month - 1, selectedDates.end.day);
+
+
+  
   const [rooms, setRooms] = useState([
     { adults: 2, children: 0, childAges: [] },
   ]);
-  const handleSubmit = () => {
-    if (!selectedDates.start || !selectedDates.end) {
-      alert("Please select a valid date range");
-      return;
-    }
+  // const handleSubmit = () => {
+  //   if (!selectedDates.start || !selectedDates.end) {
+  //     alert("Please select a valid date range");
+  //     return;
+  //   }
 
-    const start = selectedDates.start.toDate();
-    const end = selectedDates.end.toDate();
+  //   const start = selectedDates.start.toDate();
+  //   const end = selectedDates.end.toDate();
 
-    const formattedStart = start.toISOString().split("T")[0];
-    const formattedEnd = end.toISOString().split("T")[0];
-  };
+  //   const formattedStart = start.toISOString().split("T")[0];
+  //   const formattedEnd = end.toISOString().split("T")[0];
+    
+  // };
+
 
   const router = useRouter()
   const dispatch = useDispatch();
@@ -118,7 +158,7 @@ const SearchWidget = () => {
           const children = "C".repeat(room.children);
           const childAges =
             room.childAges.length > 0 ? `$${room.childAges.join(",")}` : "$";
-          return `${adults}${children}${childAges}`;
+          return `${adults}-${children}${childAges}`;
         })
         .join("|") + "|"
     );
@@ -133,6 +173,7 @@ const SearchWidget = () => {
 
     return `${totalRooms} Room${totalRooms > 1 ? "s" : ""}, ${totalGuests} Guest${totalGuests > 1 ? "s" : ""}`;
   };
+
 
 
 
@@ -170,6 +211,8 @@ const SearchWidget = () => {
   const getCityId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CityId)
   const getDestinationId = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.DestinationID)
   const getDestinationCode = useSelector((state) => state?.listing?.listingResult?.[0]?.SearchRequest?.CurrencyCode)
+  const getApiCheckInDate = useSelector((state)=>state?.listing?.listingResult?.[0]?.SearchRequest?.ChkInDate)
+  const getApiCheckOutDate = useSelector((state)=>state?.listing?.listingResult?.[0]?.SearchRequest?.ChkOutDate)
 
   useEffect(() => {
     setCity(getCityName)
@@ -300,18 +343,6 @@ const SearchWidget = () => {
   }
 
 
-
-  window.onload = function () {
-    if ('caches' in window) {
-      caches.keys().then(function (names) {
-        for (let name of names) {
-          caches.delete(name);
-        }
-      });
-    }
-  };
-
-
   useEffect(() => {
     const isOnListingPage = window.location.pathname.includes("/listing") || window.location.pathname.includes("hotels/hotellist");
 
@@ -349,42 +380,93 @@ useEffect(() => {
 }, [apiReduxPropertyName]);
 
 
-  const handleSearchBtn = async () => {
+useEffect(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paxInfoStr = urlParams.get("paxInfo");
 
-    const RoomData = rooms.length
-    const paxInfo = getPaxInfoString();
+  if (!paxInfoStr) return;
+
+  const parsePaxInfo = (paxInfo) => {
+    const roomStrings = paxInfo.split("|").filter(Boolean); // ["AAA-CC$4,3", "AA-$"]
+
+    return roomStrings.map((roomStr) => {
+      const [paxPart, agePart = ""] = roomStr.split("$"); // e.g. "AAA-CC", "4,3"
+      const [adultStr, childStr = ""] = paxPart.split("-");
+
+      const adults = (adultStr?.match(/A/g) || []).length;
+      const children = (childStr?.match(/C/g) || []).length;
+
+      const childAges = agePart
+        .split(",")
+        .filter(Boolean)
+        .map((a) => a.trim());
+
+      // Ensure age list matches child count
+      while (childAges.length < children) {
+        childAges.push("");
+      }
+
+      return {
+        adults,
+        children,
+        childAges,
+      };
+    });
+  };
+
+  const parsedRooms = parsePaxInfo(paxInfoStr);
+  setRooms(parsedRooms);
+}, []);
 
 
-    const checkInDate = selectedDates.start.toDate();
-    const checkOutDate = selectedDates.end.toDate();
-
-    const formatDate = (date) => {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = date.toLocaleString('default', { month: 'short' });
-      const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
-    };
-
-    const formattedCheckIn = formatDate(checkInDate);
-    const formattedCheckOut = formatDate(checkOutDate);
-    
-  
-
-    if (cityName && propertyName) {
-
-     window.location.href=`/hotels/hoteldetail?hotelId=${propertyId}&nationality=IN&destinationCode=${destinationId}&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&paxInfo=${paxInfo}&aff=0&currency=INR&IsPromotedProperty=false&currency=INR&searchType=undefined&countryCode=${destinationCode}&utm_source=direct&utm_medium=direct`
 
 
-    } else if (cityName && !propertyName) {
-  
+const handleSearchBtn = async () => {
+  console.log("🥸", selectedDates);
 
-      window.location.href=`/hotels/hotellist?nationality=IN&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&category=hotels&currency=INR&culture=en-GB&paxInfo=${paxInfo}&country=&countryCode=${destinationCode}&cityId=${cityId}&destinationId=${destinationId}&aff=0`
-
-    }
+  if (!selectedDates.start || !selectedDates.end) {
+    console.warn("Select dates first");
+    return;
   }
 
+  const RoomData = rooms.length;
+  const paxInfo = getPaxInfoString();
+
+  const checkInDate = new Date(
+    selectedDates.start.year,
+    selectedDates.start.month - 1,
+    selectedDates.start.day
+  );
+
+  const checkOutDate = new Date(
+    selectedDates.end.year,
+    selectedDates.end.month - 1,
+    selectedDates.end.day
+  );
+
+  console.log("checkInDate", checkInDate);
+
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  };
+
+  const formattedCheckIn = formatDate(checkInDate);
+  const formattedCheckOut = formatDate(checkOutDate);
+
+  if (cityName && propertyName) {
+    window.location.href = `/hotels/hoteldetail?hotelId=${propertyId}&nationality=IN&destinationCode=${destinationId}&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&paxInfo=${paxInfo}&aff=0&currency=INR&IsPromotedProperty=false&currency=INR&searchType=undefined&countryCode=${destinationCode}&utm_source=direct&utm_medium=direct`;
+  } else if (cityName && !propertyName) {
+    window.location.href = `/hotels/hotellist?nationality=IN&checkIn=${formattedCheckIn}&checkOut=${formattedCheckOut}&noOfRoom=${RoomData}&category=hotels&currency=INR&culture=en-GB&paxInfo=${paxInfo}&country=&countryCode=${destinationCode}&cityId=${cityId}&destinationId=${destinationId}&aff=0`;
+  }
+};
 
 
+
+
+console.log("harsh1212", selectedDates)
 
 
 
@@ -467,7 +549,7 @@ useEffect(() => {
               setSelectedDates(newRange);
               // handleChange(newRange);
             }}
-            onClick={handleSubmit}
+            // onClick={handleSubmit}
             minValue={today(getLocalTimeZone())}
             labelPlacement="outside"
             visibleMonths={isMobile ? 1 : 2}
